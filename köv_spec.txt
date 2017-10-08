@@ -1,4 +1,4 @@
-Arduino által vezérelt okosház
+﻿Arduino által vezérelt okosház
 ------------------------------
 
 Biztonsági és automatizálási funkciók bluetoothon keresztül az Androidos telefonunkkal.
@@ -30,4 +30,24 @@ A következő szerelvények legyenek csatlakoztatva:
 				   behúzott állapotban egy relé amíg azt el nem éri
  - LCD kijelző: a felső sorban írja az aktuális és a kívánt hőfokot,
                 az alsóban pedig, hogy a riasztás funkció aktív-e
+
 				
+Android alkalmazás menüpontok:
+------------------------------
+
+- Világítás menüpont
+   Beltéri lámpa be
+   Beltéri lámpa ki
+   Kültéri lámba be
+   Kültéri lámba ki
+   
+- Biztonság menüpont
+   Riasztás funkció be
+   Riasztás funkció ki
+   Visszajelzés, hogy a mozgásérzékelő aktív-e
+   
+- Termosztát menüpont
+   kívánt hőfok fel
+   kívánt hőfok le
+   Visszajelzés az aktuális hőfokról
+   Visszajelzés a kívánt hőfokról
