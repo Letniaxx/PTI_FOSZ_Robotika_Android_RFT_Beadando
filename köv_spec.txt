@@ -31,6 +31,18 @@ A következő szerelvények legyenek csatlakoztatva:
  - LCD kijelző: a felső sorban írja az aktuális és a kívánt hőfokot,
                 az alsóban pedig, hogy a riasztás funkció aktív-e
 
+
+Kezelői felületek:
+------------------
+
+- Infravörös távirányító:
+   1-es gomb: beltéri lámba be/ki
+   2-es gomb: kültéri lámba be/ki
+   3-as gomb: riasztás be/ki
+   < gomb: kívánt hőfok le
+   > gomb: kívánt hőfok fel
+
+- Android alkalmazás: (lásd lentebb)
 				
 Android alkalmazás menüpontok:
 ------------------------------
