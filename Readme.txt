@@ -1,4 +1,4 @@
-Eszterházy Károly Egyetem
+﻿Eszterházy Károly Egyetem
 -------------------------
 
 Programtervező Informatikus szak
@@ -10,7 +10,7 @@ Felsőoktatási Szakképzés
 
 Munkatársak
 -----------
-Dobozi András
-Eged Zsolt
-Bíró Patrik
-Balázs Gergő
+Dobozi András (dbzmonty@gmail.com, 	 dbzmonty   )
+Eged Zsolt    (sont16@gmail.com, 	 sontqq     )
+Bíró Patrik   (biropatrik9612@gmail.com, biropatrik )
+Balázs Gergő  (gregyx101@gmail.com, 	 Gr3gYx     )
