@@ -1,73 +1,73 @@
-#include <Wire.h>  // Comes with Arduino IDE
-#include <LiquidCrystal_I2C.h>
+#include <Wire.h>                                                 //lcd-hez kell
+#include <LiquidCrystal_I2C.h>                                    //lcd-hez kell
+#include <SoftwareSerial.h>                                       //bt-hoz kell 
+  
+#define rxPin 0                                                   //bt-hoz kell
+#define txPin 1                                                   //bt-hoz kell
 
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    //lcd-hez kell
 
 const int kintiVilagitas = 12;
 const int bentiVilagitas = 11;
 const int termosztatFutson = 10;
 const int pir = 9;
-char btFogadottAdat = 0;
+const int potiPin = 1;
+int poti;
+int poti_elozo;
 
+SoftwareSerial blueTooth(rxPin, txPin);                         //létrehoz egy bt példányt
 
 void setup()
 {
   Serial.begin(9600);
-
+  blueTooth.begin(9600);
   pinMode(kintiVilagitas, OUTPUT);
   pinMode(bentiVilagitas, OUTPUT);
   pinMode(termosztatFutson, OUTPUT);
   pinMode(pir, INPUT);
+  pinMode(potiPin, INPUT);
   
   lcd.begin(16,2);
-  lcd.backlight();
+  lcd.backlight();  
 }
 
 void loop()
-{    
-  if(Serial.available() > 0)  // Send data only when you receive data:
-  {
-    btFogadottAdat = Serial.read();
-    Serial.print(btFogadottAdat);
-    Serial.print("\n");
-    if (btFogadottAdat == '1')
+{   
+  poti = analogRead(potiPin);
+  poti = map(poti, 0, 1023, 0, 99);    
+  
+  if (Serial.available())
     {
-      digitalWrite(kintiVilagitas, HIGH);
-      digitalWrite(bentiVilagitas, LOW);
-      lcdSor1Kiir("Kinti");
+      if (poti_elozo != poti)
+      {
+      Serial.println(poti);
+      blueTooth.write(poti);
+      poti_elozo = poti;
+      }
+      delay(20);
+
+      char btFogadottAdat = blueTooth.read();
+              
+        switch(btFogadottAdat)
+        {
+          case 'a':   digitalWrite(bentiVilagitas, HIGH);   
+                      break;
+          
+          case 'b':   digitalWrite(bentiVilagitas, LOW);         
+                      break;
+    
+          case 'c':   digitalWrite(kintiVilagitas, HIGH);
+                      break;
+          
+          case 'd':   digitalWrite(kintiVilagitas, LOW);
+                      break;
+          
+          default:    break;
+        }
     }
-    else if (btFogadottAdat == '0')
-    {
-      digitalWrite(kintiVilagitas, LOW);
-      digitalWrite(bentiVilagitas, HIGH);
-      lcdSor1Kiir("Benti"); 
-    }
-  }          
-
-  /*
-  if (digitalRead(pir))
-  {
-    lcdSor2Kiir("Mozgas van");
-  }
-  else lcd.clear();
-  */
-}
-
-
-
-void lcdSor1Kiir(char text1[5])
-{
-  lcd.clear();
-  lcd.setCursor(0,0); //Start at character 0 on line 0
-  lcd.print(text1);  
-  //delay(10000);
-}
-
-void lcdSor2Kiir(char text2[10])
-{
-  //lcd.clear();  
+  //lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Hangero");  
   lcd.setCursor(0,1);
-  lcd.print(text2);  
-  //delay(10000);
+  lcd.print(poti); 
 }
-
