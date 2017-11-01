@@ -12,47 +12,24 @@ Bíró Patrik
 Balázs Gergő
 
 --------------------------------------------------------------------------------
-
-Műszaki leírás:
----------------
+Leírás:
 
 Egy Arduino mikrokontroller által vezérelt okosház vezérlőt kell megvalósítani.
-A következő szerelvények legyenek csatlakoztatva:
+Ennek több funkciója legyen: 
 
- - Beltéri lámpa: telefonon lehessen be és kikapcsolni
- - Kültéri lámpa: telefonon lehessen be és kikapcsolni,
-                  valamint sötétben mozgásra kapcsoljon fel 3mp-re
- - Mozgásérzékelő: Sötétben a kültéri lámpát vezérelje,
-                   beriasztott állapotban pedig indítsa el a szirénát
- - Sziréna: Ha a risztás funkció aktív és mozgás van, akkor csipogjon 5mp-ig
- - Thermo szenzor: Termosztátként funkcionáljon, telefonon
-                   lehessen szabályozni a kívánt hőfokot és addig legyen
-		   behúzott állapotban egy relé amíg azt el nem éri
- - LCD kijelző: a felső sorban írja az aktuális és a kívánt hőfokot,
-                az alsóban pedig, hogy a riasztás funkció aktív-e
+ - Beltéri- és kültéri lámpa irányítás, amiket telefonon keresztül be- és kikapcsolhatunk,
+valamint sötétben mozgás esetén kapcsolódjon fel az adott lámpa 3 másodpercig.
 
+ - Legyen megvalósítva riasztó, ami aktív állapot bekapcsolása után mozgásra 
+riaszt, és ezt jelzi hanghatással, majd telefonra is küld értesítést erről az állapotról.
 
-Kezelői felület:
-------------------
+ - Tudnia kell a hőfokot szabályozni, azaz a kívánt hőmérséklet beállítása után a kazánt 
+az adott hőmérsékletig fűtse fel (míg el nem éri a kívánt hőmérsékletet a szoba, addig fűt). 
+Emellett mindig jelezze ki az aktuális hőmérséletett telefonon, és egy külön kijelzőn is.
 
-- Android alkalmazás: (lásd lentebb)
-				
-Android alkalmazás menüpontok:
-------------------------------
+A telefonos program kommunikáljon a rendszerrel, kapjon információt a riasztó állapotáról, 
+hőfokról, és ha kell akkor be/ki kapcsolhassuk vele a kültéri és beltéri lámpákat, 
+valamint a hőfokot tudjuk kezelni vele. 
+Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta. 
 
-- Világítás menüpont
-   Beltéri lámpa be
-   Beltéri lámpa ki
-   Kültéri lámba be
-   Kültéri lámba ki
-   
-- Biztonság menüpont
-   Riasztás funkció be
-   Riasztás funkció ki
-   Visszajelzés, hogy a mozgásérzékelő aktív-e
-   
-- Termosztát menüpont
-   kívánt hőfok fel
-   kívánt hőfok le
-   Visszajelzés az aktuális hőfokról
-   Visszajelzés a kívánt hőfokról
+Az árajánlat, munkadíjjal együtt 50.000ft.
