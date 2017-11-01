@@ -1,0 +1,44 @@
+A projektet két részre lehet bontani, melyek a Vezérlés és annak részei, és a Telefonos alkalmazás.
+
+Vezérléshez használt elemek:
+-Arduino Micro (x1)
+-Infravörös Mozgásérzékelõ Szenzor (x1)
+-Digitális Hõérzékelõ Szenzor (x1)
+-Piezo Hangszóró (x1)
+-LCD kijelzõ (x1)
+-Fényerõ Szenzor (x1) ??????? ez van, vagy ez a távirányító része volt?
+-Bluetooth Adóvevõ (x1)
+-Led (x3) (A világításokat demonstráció céljából ledekkel oldjuk meg.)
+-Relé (x3)
+-Ehhez szükséges kábelek és ellenállások
+
+-MIVEL VAN VEZÉRELVE A KAZÁN VAGY VATEVÖR?
+
+
+Vezérlés programozására használt program: Arduino
+
+Telefonos alkalmazás programozására használt program: Android Studio
+App neve: Smart Home Controller
+
+ Az alkalmazás megnyitásakor létesíteni kell a bluetooth kapcsolatot. Hogy az alkalmazás többi részét elérjük, csatlakozni kell bluetooth segítségével az Arduino bluetooth moduljához az elsõ képernyõn, ahol ki listázódnak a közelben lévõ bluetooth eszközök. Ez a StartActivity.
+ Miután a Android párosult az Arduinoval az alkalmazásban megjelnik a Fõmenü Activity, melyben 1 ImageView és 4 almenüpontra irányító Gombokat találunk. Minden almenü egy új Activity, rendelkezik egy címsorral és egy visszagombbal.
+ 
+ Világítás Activity:
+  Két TextView és négy Gomb szerepel, melyekbõl
+  2 Gomb és 1 TextView a Beltéri Világítás On/Off,
+  2 Gomb és 1 TextView pedig a Kültéri Világítós On/Off.
+ 
+ Biztonság Acitivity:
+  Két TextView, Két gomb és egy ImageView, melyekbõl 
+  1 TextView és 2 Gomb a Riasztó On/Off,
+  1 TextView és 1 ImageView a Mozgásérzékelõ.
+  A mozgásérzékelõhöz használt kép a bluetoothon keresztül kapott jel alapján vált egy másik képre, mely jelzi, hogy épp mozgást érzékel az eszköz.
+
+ Termosztát Activity:
+  Négy TextView és Két gomb, melyekbõl 
+  2 TextView a Jelenlegi Hõfok és °C, 
+  2 TextView és 2 Gomb a Kívánt Hõfok és °C +/-.
+  A jelenlegi és kívánt hõfok értékeit bluetoothon keresztül kapja az eszköz.
+
+ Bluetooth Activity:
+  ??? ListView?

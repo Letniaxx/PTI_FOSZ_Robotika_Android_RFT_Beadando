@@ -11,7 +11,7 @@ Eged Zsolt
 Bíró Patrik
 Balázs Gergő
 
----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Műszaki leírás:
 ---------------
@@ -19,28 +19,21 @@ Műszaki leírás:
 Egy Arduino mikrokontroller által vezérelt okosház vezérlőt kell megvalósítani.
 A következő szerelvények legyenek csatlakoztatva:
 
- - Beltéri lámpa: telefonon és távirányítón lehessen be és kikapcsolni
- - Kültéri lámpa: telefonon és távirányítón lehessen be és kikapcsolni,
+ - Beltéri lámpa: telefonon lehessen be és kikapcsolni
+ - Kültéri lámpa: telefonon lehessen be és kikapcsolni,
                   valamint sötétben mozgásra kapcsoljon fel 3mp-re
  - Mozgásérzékelő: Sötétben a kültéri lámpát vezérelje,
                    beriasztott állapotban pedig indítsa el a szirénát
  - Sziréna: Ha a risztás funkció aktív és mozgás van, akkor csipogjon 5mp-ig
- - Thermo szenzor: Termosztátként funkcionáljon, telefonon és távirányítón
+ - Thermo szenzor: Termosztátként funkcionáljon, telefonon
                    lehessen szabályozni a kívánt hőfokot és addig legyen
-				   behúzott állapotban egy relé amíg azt el nem éri
+		   behúzott állapotban egy relé amíg azt el nem éri
  - LCD kijelző: a felső sorban írja az aktuális és a kívánt hőfokot,
                 az alsóban pedig, hogy a riasztás funkció aktív-e
 
 
-Kezelői felületek:
+Kezelői felület:
 ------------------
-
-- Infravörös távirányító:
-   1-es gomb: beltéri lámba be/ki
-   2-es gomb: kültéri lámba be/ki
-   3-as gomb: riasztás be/ki
-   < gomb: kívánt hőfok le
-   > gomb: kívánt hőfok fel
 
 - Android alkalmazás: (lásd lentebb)
 				
