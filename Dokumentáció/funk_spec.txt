@@ -1,0 +1,50 @@
+Smart Home - Funkcionális Specifikáció
+
+Áttekintés:
+
+A projekt egy okosotthon vezérlését valósítja meg, mely két fõbb részbõl áll. Egy mikrokonktrollerbõl és egy okostelefon alkalmazásból.
+Fõbb funkciói:
+- Világítás fel és lekapcsolása
+- Riasztó, mozgásérzékelõ kapcsolása
+- Hõfokszabályozás
+- Bluetooth kezelés
+
+Szerver oldal (mikrokontroller)
+
+Az eszköz egy Arduino legyen.
+Közöttük a kapcsolat Bluetooth-al legyen megoldva.
+Az Arduino legyen ellátva hõfokmérõvel.
+Ha a hõmérséklet a beállított érték alá esik akkor beindítja a kazánt.
+Csak akkor küldjön hõmérsékletinformációt a telefonra, ha az elõzõ értékhez képest változott.
+Érzékelje a fényerõt és a mozgást. Ha a riasztó éles, jelzést küld a telefonnak.
+Ezen érzékelõk értékeit mutassa a mikrokontroller LCD kijelzõjén.
+
+Kliens oldal (telefon applikáció)
+
+Az alkalmazás Android operációs rendszerre készüljön.
+Legyen kompatibilis 4.4-tõl felfelé.
+A telefon elforgatására az alkalmazás felülete igazodjon az orientációhoz. (fektetett nézet)
+Az alkalmazásba való lépéskor figyelmeztesse a felhasználót, hogy kapcsolja be a bluetooth-t a telefonján.
+Ha a bluetooth be van kapcsolva, mutasson egy gombot amivel a párosított eszközökhöz lehet kapcsolódni.
+Amennyiben ezek megtörténtek lépjen be a fõmenübe.
+
+A fõmenüben 4 gomb legyen látható: Világítás, Biztonság, Termosztát, Bluetooth.
+Az alkalmazás háttere legyen fehér.
+A gombok színe legyen a narancssárga egy sötét árnyalata és a felirat legyen vastagon szedett fekete.
+A gombok legyenek középre igazítva és ne töltsék ki a képernyõ teljes szélességét.
+A képernyõ felsõ részében a SMART HOME felirat legyen látható egy okosotthonra utaló képre írva.
+
+Világítás:
+A kül és beltéri lámpákat lehessen fel, illetve lekapcsolni 2-2 gombal.
+
+Biztonság:
+A riasztó élesítésére és kikapcsolására tartalmazzon két gombot.
+Legyen egy ikon vagy piktogram ami a mozgásérzékelõ visszajelzésére szolgáljon.
+
+Termosztát:
+Mutassa a jelenlegi szobahõmérsékletet.
+Mutassa a beállított, kívánt hõfokot, illetve ez legyen változtatható két gomb segítségével.
+
+Bluetooth:
+A Bluetoot kapcsolatok kezelésére szolgáló menüpont.
+Párosítás, kapcsolat, stb.
