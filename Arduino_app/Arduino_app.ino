@@ -1,7 +1,4 @@
-#include <Wire.h>                                                 //lcd-hez kell
 #include <LiquidCrystal_I2C.h>                                    //lcd-hez kell
-#include <SoftwareSerial.h>                                       //bt-hoz kell 
-
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    //lcd-hez kell
 
 //PIN-ek
@@ -12,6 +9,7 @@ const int bentiVilagitas = 11;
 const int termosztatFutson = 10;
 const int pir = 9;
 const int hofokPin = 0;
+const int fenyPin = 1;
 
 //hőfokméréshez
 const int numReadings = 10;         //hány mérést átlagoljon
@@ -20,19 +18,21 @@ int readings[numReadings];          //mérések eredményei
 int readIndex = 0;                  //a tömb indexe
 int total = 0;                      //mérések összege
 int average = 0;                    //mérések átlaga, legpontosabb!!!
-int average_prev = 0;               //előző mérésátlag
 
 //változók
-int kivantHofok = 28;               //a kívánt hőfok a szobában
 char btFogadottAdat = ' ';          //BT app által küldött karakter
+int kivantHofok = 25;               //a kívánt hőfok a szobában
+int mozgasVan = 0;                  //érzékel-e mozgást a pir
+int riasztoBekapcsolva = 0;         //be van-e kapcsolva a roasztó
+int ertekGyujtemeny[4] = {0,0,0,0}; //értékek gyűjteménye ami elküldésre kerül
+int ertekGyujtemeny_[4] = {0,0,0,0}; 
+int fenyero = 0;                    //a fotoellenállás aktuális értéke
 
-SoftwareSerial bluetooth(rxPin, txPin);   //létrehoz egy bt példányt
 
 void setup()
 {  
-  bluetooth.begin(9600);
-  delay(200);
-  bluetooth.print("Initializing...");
+  Serial.begin(9600);
+  delay(200);  
   lcd.begin(16,2);
   lcd.backlight();  
   
@@ -44,22 +44,27 @@ void setup()
   //bemenetek
   pinMode(pir, INPUT);
   pinMode(hofokPin, INPUT);  
+  pinMode(fenyPin, INPUT);
 
   //mérések átlagait beállítja 0-ra
   for (int thisReading = 0; thisReading < numReadings; thisReading++) 
     {
       readings[thisReading] = 0;
-    }
-  delay(1000);
+    }  
+  delay(500);
 }
 
 void loop()
 {       
   hofokMeres();                 //eredménye az: average
   lcdKijelzes();                //LCD kijelző frissítése
-  bluetoothEsemenyek();
-  kazanVezerles();
-
+  bluetoothEsemenyek();         //bejövő parancsok figyelése
+  kazanVezerles();              //hőfokok függvényében ki és bekapcsolja a kazánt
+  mozgasErzekeles();   
+  //fenyviszonyErzekeles();         
+  riasztoVezerles();
+  ertekekOsszegyujtese();       //változók értékeit összegyűjti egy tömbbe
+  ertekekKuldese();             //a tömb tartalmát serialon elküldi
 }
 
 void hofokMeres()
@@ -85,22 +90,40 @@ void lcdKijelzes()
   lcd.setCursor(9,0);  
   lcd.print("Set:"); 
   lcd.setCursor(0,1);
-  lcd.print("Fogadott:"); 
+  lcd.print("Alarm:"); 
   
   lcd.setCursor(6,0);
   lcd.print(average);  
   lcd.setCursor(14,0);
   lcd.print(kivantHofok);
-  lcd.setCursor(11,1);
-  lcd.print(btFogadottAdat); 
+  //RIASZTÓ
+  lcd.setCursor(7,1);
+  if (riasztoBekapcsolva == 0)
+  {
+    lcd.print("OFF");
+  }
+  else if (riasztoBekapcsolva == 1)
+  {
+    lcd.print("ON ");
+  }
+  //MOZGÁS
+  lcd.setCursor(11,1);  
+  if (mozgasVan == 0)
+  {
+    lcd.print("     ");
+  }
+  else if (mozgasVan == 1)
+  {
+    lcd.print("AKTIV");
+  }
 }
 
 void bluetoothEsemenyek()
 {
   //bejövő parancsok figyelése
-  if (bluetooth.available())
+  if (Serial.available() > 0)
     {
-      btFogadottAdat = bluetooth.read();
+      btFogadottAdat = Serial.read();
               
         switch(btFogadottAdat)
         {
@@ -115,19 +138,22 @@ void bluetoothEsemenyek()
           
           case 'd':   digitalWrite(kintiVilagitas, LOW);
                       break;
+
+          case 'e':   kivantHofokFel();
+                      break;
+          
+          case 'f':   kivantHofokLe();
+                      break;
+    
+          case 'g':   riasztoBekapcsolva = 1;
+                      break;
+          
+          case 'h':   riasztoBekapcsolva = 0;
+                      break;
           
           default:    break;
         }
-    }
-
-  //kimenő parancsok
-  if (average_prev != average)
-    {  
-      Serial.println(average);    
-      bluetooth.println(average);
-      average_prev = average;
-    }
-  
+    }  
 }
 
 void kazanVezerles()
@@ -140,4 +166,79 @@ void kazanVezerles()
   {
     digitalWrite(termosztatFutson, LOW);   
   }
+}
+
+void mozgasErzekeles()
+{
+  if (digitalRead(pir) == HIGH)
+  {
+    mozgasVan = 1;
+  }
+  else if (digitalRead(pir) == LOW)
+  {
+    mozgasVan = 0;
+  }  
+}
+
+void fenyviszonyErzekeles()
+{
+  fenyero = analogRead(fenyPin);
+  
+  if ((mozgasVan == 1) && (fenyero < 300))
+  {
+    digitalWrite(kintiVilagitas, HIGH);
+  }
+  else
+  {
+    digitalWrite(kintiVilagitas, LOW);
+  }
+}
+
+void riasztoVezerles()
+{
+  //majd
+}
+
+void kivantHofokFel()
+{
+  if (kivantHofok < 35)
+    kivantHofok++;
+}
+
+void kivantHofokLe()
+{
+  if (kivantHofok > 15)
+    kivantHofok--;
+}
+
+void ertekekOsszegyujtese()
+{  
+  ertekGyujtemeny[0] = mozgasVan;
+  ertekGyujtemeny[1] = riasztoBekapcsolva;
+  ertekGyujtemeny[2] = kivantHofok;
+  ertekGyujtemeny[3] = average;
+}
+
+void ertekekKuldese()
+{  
+   if ( (ertekGyujtemeny_[0] != ertekGyujtemeny[0]) ||
+        (ertekGyujtemeny_[1] != ertekGyujtemeny[1]) ||
+        (ertekGyujtemeny_[2] != ertekGyujtemeny[2]) ||
+        (ertekGyujtemeny_[3] != ertekGyujtemeny[3]) )
+    {
+       Serial.print('#');                    //a csomag elejére: #  
+       for(int k=0; k<4; k++)    
+       {
+         Serial.print(ertekGyujtemeny[k]);   //értékek
+         Serial.print('+');                  //az értékek közé: +
+       }  
+       Serial.print('~');                    //a csomag végére: ~  
+       Serial.println();                     //új sor
+       delay(10);                            //kis szünet 
+
+      (ertekGyujtemeny_[0] = ertekGyujtemeny[0]);
+      (ertekGyujtemeny_[1] = ertekGyujtemeny[1]);
+      (ertekGyujtemeny_[2] = ertekGyujtemeny[2]);
+      (ertekGyujtemeny_[3] = ertekGyujtemeny[3]);
+    }  
 }
