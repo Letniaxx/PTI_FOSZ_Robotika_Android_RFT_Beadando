@@ -10,6 +10,7 @@ const int termosztatFutson = 10;
 const int pir = 9;
 const int hofokPin = 0;
 const int fenyPin = 1;
+const int piezoPin = 8;
 
 //hőfokméréshez
 const int numReadings = 10;         //hány mérést átlagoljon
@@ -27,6 +28,9 @@ int riasztoBekapcsolva = 0;         //be van-e kapcsolva a roasztó
 int ertekGyujtemeny[4] = {0,0,0,0}; //értékek gyűjteménye ami elküldésre kerül
 int ertekGyujtemeny_[4] = {0,0,0,0}; 
 int fenyero = 0;                    //a fotoellenállás aktuális értéke
+int kintiVilagitasSzamlalo = 0;
+int kintiVilagitasIdotartam = 15;
+int kintiVilagitasFenyErzek = 300;
 
 
 void setup()
@@ -61,10 +65,11 @@ void loop()
   bluetoothEsemenyek();         //bejövő parancsok figyelése
   kazanVezerles();              //hőfokok függvényében ki és bekapcsolja a kazánt
   mozgasErzekeles();   
-  //fenyviszonyErzekeles();         
+  kintiVilagitasVezerles();         
   riasztoVezerles();
   ertekekOsszegyujtese();       //változók értékeit összegyűjti egy tömbbe
   ertekekKuldese();             //a tömb tartalmát serialon elküldi
+  delay(200);                   //kis szünet 
 }
 
 void hofokMeres()
@@ -133,10 +138,10 @@ void bluetoothEsemenyek()
           case 'b':   digitalWrite(bentiVilagitas, LOW);         
                       break;
     
-          case 'c':   digitalWrite(kintiVilagitas, HIGH);
+          case 'c':   kintiVilagitasOn();
                       break;
           
-          case 'd':   digitalWrite(kintiVilagitas, LOW);
+          case 'd':   kintiVilagitasOff();
                       break;
 
           case 'e':   kivantHofokFel();
@@ -173,6 +178,12 @@ void mozgasErzekeles()
   if (digitalRead(pir) == HIGH)
   {
     mozgasVan = 1;
+    
+    //ha mozgás és sötét van, akkor nullázza a számlálót, azaz indítja a kinti világítást
+    if (fenyero < kintiVilagitasFenyErzek)
+    {
+      kintiVilagitasSzamlalo = 0;
+    }    
   }
   else if (digitalRead(pir) == LOW)
   {
@@ -180,13 +191,14 @@ void mozgasErzekeles()
   }  
 }
 
-void fenyviszonyErzekeles()
+void kintiVilagitasVezerles()
 {
   fenyero = analogRead(fenyPin);
-  
-  if ((mozgasVan == 1) && (fenyero < 300))
+    
+  if (kintiVilagitasSzamlalo < kintiVilagitasIdotartam)
   {
     digitalWrite(kintiVilagitas, HIGH);
+    kintiVilagitasSzamlalo++;
   }
   else
   {
@@ -194,9 +206,26 @@ void fenyviszonyErzekeles()
   }
 }
 
+void kintiVilagitasOn()
+{
+  kintiVilagitasSzamlalo = 0;
+}
+
+void kintiVilagitasOff()
+{
+  kintiVilagitasSzamlalo = kintiVilagitasIdotartam;
+}
+
 void riasztoVezerles()
 {
-  //majd
+  if ( (riasztoBekapcsolva == 1) && (mozgasVan == 1) )
+  {
+    tone(piezoPin, 1000, 70);    
+  }
+  else
+  {
+    noTone(piezoPin);    
+  }
 }
 
 void kivantHofokFel()
@@ -234,7 +263,7 @@ void ertekekKuldese()
        }  
        Serial.print('~');                    //a csomag végére: ~  
        Serial.println();                     //új sor
-       delay(10);                            //kis szünet 
+       
 
       (ertekGyujtemeny_[0] = ertekGyujtemeny[0]);
       (ertekGyujtemeny_[1] = ertekGyujtemeny[1]);
