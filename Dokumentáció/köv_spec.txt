@@ -14,7 +14,7 @@ Balázs Gergő
 --------------------------------------------------------------------------------
 Leírás:
 
-Egy Arduino mikrokontroller által vezérelt okosház vezérlőt kell megvalósítani.
+Egy elektronika által vezérelt okosház vezérlőt kell megvalósítani.
 Ennek több funkciója legyen: 
 
  - Beltéri- és kültéri lámpa irányítás, amiket telefonon keresztül be- és kikapcsolhatunk,
@@ -24,7 +24,7 @@ valamint sötétben mozgás esetén kapcsolódjon fel az adott lámpa 3 másodpe
 riaszt, és ezt jelzi hanghatással, majd telefonra is küld értesítést erről az állapotról.
 
  - Tudnia kell a hőfokot szabályozni, azaz a kívánt hőmérséklet beállítása után a kazánt 
-az adott hőmérsékletig fűtse fel (míg el nem éri a kívánt hőmérsékletet a szoba, addig fűt). 
+addig járassa, míg a szoba el nem éri a kívánt hőmérsékletet, utána kapcsoljon ki.
 Emellett mindig jelezze ki az aktuális hőmérséletett telefonon, és egy külön kijelzőn is.
 
 A telefonos program kommunikáljon a rendszerrel, kapjon információt a riasztó állapotáról, 
@@ -32,4 +32,4 @@ hőfokról, és ha kell akkor be/ki kapcsolhassuk vele a kültéri és beltéri 
 valamint a hőfokot tudjuk kezelni vele. 
 Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta. 
 
-Az árajánlat, munkadíjjal együtt 50.000ft.
+Az egész, munkadíjjal együtt ne kerüljön többe, mint 50.000 Ft.

@@ -1,24 +1,24 @@
 Arduino által vezérelt okosház - ÁRAJÁNLAT					   2017.11.01
 _____________________________________________________________________________________________
 
-								Fõ Megrendelõ:
+                                        Fõ Megrendelõ:
 Dobozi András							magánfél
 Eged Zsolt							
 Bíró Patrik
 Balázs Gergõ
 ______________________________________________________________________________________________
-Megnevezés							MunkaDíj	AnyagÁr
+Megnevezés                              MunkaDíj       AnyagÁr
 
-Okosház alap							40 000 Ft	10 000 Ft
+Okosház alap                            40.000 Ft      10.000 Ft
 ______________________________________________________________________________________________
-Munkadíj és anyagköltség:					40 000 Ft	10 000 Ft
+Munkadíj és anyagköltség:               40.000 Ft      10.000 Ft
 
-	Összesen: 						50 000 Ft
-	ÁFA öszeg		0% (+):				     0 Ft
+	Összesen:                           50.000 Ft
+	ÁFA öszeg                0% (+):         0 Ft
 
 Az ÁFA törvény §(1) bekezdés b) pontja szerinti szolgáltatás, az ÁFÁ-t a megrendelõ fizeti!
 
 			Ajánlatunk 30 napig érvényes.
 
-Eger, 2017.11.01.							......................
-									       Cégvezetõ
+Eger, 2017.11.01.                          ......................
+                                                 Cégvezetõ
