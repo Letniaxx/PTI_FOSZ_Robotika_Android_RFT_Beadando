@@ -22,14 +22,14 @@ int average = 0;                    //mérések átlaga, legpontosabb!!!
 
 //változók
 char btFogadottAdat = ' ';          //BT app által küldött karakter
-int kivantHofok = 25;               //a kívánt hőfok a szobában
+int kivantHofok = 20;               //a kívánt hőfok a szobában
 int mozgasVan = 0;                  //érzékel-e mozgást a pir
 int riasztoBekapcsolva = 0;         //be van-e kapcsolva a roasztó
 int ertekGyujtemeny[4] = {0,0,0,0}; //értékek gyűjteménye ami elküldésre kerül
 int ertekGyujtemeny_[4] = {0,0,0,0}; 
 int fenyero = 0;                    //a fotoellenállás aktuális értéke
 int kintiVilagitasSzamlalo = 0;
-int kintiVilagitasIdotartam = 15;
+int kintiVilagitasIdotartam = 25;
 int kintiVilagitasFenyErzek = 300;
 
 
@@ -55,6 +55,10 @@ void setup()
     {
       readings[thisReading] = 0;
     }  
+
+  //benti világíáts kikapcsolva induljon
+  digitalWrite(bentiVilagitas, HIGH);
+  //kis szünet indulás előtt
   delay(500);
 }
 
@@ -67,9 +71,9 @@ void loop()
   mozgasErzekeles();   
   kintiVilagitasVezerles();         
   riasztoVezerles();
-  ertekekOsszegyujtese();       //változók értékeit összegyűjti egy tömbbe
-  ertekekKuldese();             //a tömb tartalmát serialon elküldi
-  delay(200);                   //kis szünet 
+  ertekekOsszegyujtese();            //változók értékeit összegyűjti egy tömbbe
+  ertekekValtozasanakEllenorzese();  //a tömb tartalmát serialon elküldi
+  delay(200);                        //kis szünet 
 }
 
 void hofokMeres()
@@ -132,10 +136,10 @@ void bluetoothEsemenyek()
               
         switch(btFogadottAdat)
         {
-          case 'a':   digitalWrite(bentiVilagitas, HIGH);   
+          case 'a':   digitalWrite(bentiVilagitas, LOW);   
                       break;
           
-          case 'b':   digitalWrite(bentiVilagitas, LOW);         
+          case 'b':   digitalWrite(bentiVilagitas, HIGH);         
                       break;
     
           case 'c':   kintiVilagitasOn();
@@ -155,6 +159,9 @@ void bluetoothEsemenyek()
           
           case 'h':   riasztoBekapcsolva = 0;
                       break;
+
+          case 'i':   ertekekKuldese();
+                      break;
           
           default:    break;
         }
@@ -165,11 +172,11 @@ void kazanVezerles()
 {  
   if (kivantHofok > average)
   {
-    digitalWrite(termosztatFutson, HIGH);
+    digitalWrite(termosztatFutson, LOW);
   }
   else if (kivantHofok < average)
   {
-    digitalWrite(termosztatFutson, LOW);   
+    digitalWrite(termosztatFutson, HIGH);   
   }
 }
 
@@ -197,12 +204,12 @@ void kintiVilagitasVezerles()
     
   if (kintiVilagitasSzamlalo < kintiVilagitasIdotartam)
   {
-    digitalWrite(kintiVilagitas, HIGH);
+    digitalWrite(kintiVilagitas, LOW);
     kintiVilagitasSzamlalo++;
   }
   else
   {
-    digitalWrite(kintiVilagitas, LOW);
+    digitalWrite(kintiVilagitas, HIGH);
   }
 }
 
@@ -241,33 +248,38 @@ void kivantHofokLe()
 }
 
 void ertekekOsszegyujtese()
-{  
+{   
   ertekGyujtemeny[0] = mozgasVan;
   ertekGyujtemeny[1] = riasztoBekapcsolva;
   ertekGyujtemeny[2] = kivantHofok;
   ertekGyujtemeny[3] = average;
 }
 
-void ertekekKuldese()
-{  
-   if ( (ertekGyujtemeny_[0] != ertekGyujtemeny[0]) ||
+void ertekekValtozasanakEllenorzese()
+{
+  if (  (ertekGyujtemeny_[0] != ertekGyujtemeny[0]) ||
         (ertekGyujtemeny_[1] != ertekGyujtemeny[1]) ||
         (ertekGyujtemeny_[2] != ertekGyujtemeny[2]) ||
         (ertekGyujtemeny_[3] != ertekGyujtemeny[3]) )
     {
-       Serial.print('#');                    //a csomag elejére: #  
-       for(int k=0; k<4; k++)    
-       {
-         Serial.print(ertekGyujtemeny[k]);   //értékek
-         Serial.print('+');                  //az értékek közé: +
-       }  
-       Serial.print('~');                    //a csomag végére: ~  
-       Serial.println();                     //új sor
-       
+      ertekekKuldese();
+    }
+}
 
-      (ertekGyujtemeny_[0] = ertekGyujtemeny[0]);
-      (ertekGyujtemeny_[1] = ertekGyujtemeny[1]);
-      (ertekGyujtemeny_[2] = ertekGyujtemeny[2]);
-      (ertekGyujtemeny_[3] = ertekGyujtemeny[3]);
-    }  
+void ertekekKuldese()
+{        
+  Serial.print('#');                    //a csomag elejére: #  
+  for(int k=0; k<4; k++)    
+  {
+    Serial.print(ertekGyujtemeny[k]);   //értékek
+    Serial.print('+');                  //az értékek közé: +
+  }  
+  Serial.print('@');                    //a csomag végére: @  
+  Serial.println();                     //új sor
+
+  //az "előző" értékeknek megadja az aktuálisat
+  (ertekGyujtemeny_[0] = ertekGyujtemeny[0]);
+  (ertekGyujtemeny_[1] = ertekGyujtemeny[1]);
+  (ertekGyujtemeny_[2] = ertekGyujtemeny[2]);
+  (ertekGyujtemeny_[3] = ertekGyujtemeny[3]);    
 }
