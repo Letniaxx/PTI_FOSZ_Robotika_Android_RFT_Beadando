@@ -4,13 +4,14 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    //lcd-hez kell
 //PIN-ek
 const int rxPin = 0;
 const int txPin = 1;
-const int kintiVilagitas = 12;
-const int bentiVilagitas = 11;
-const int termosztatFutson = 10;
-const int pir = 9;
-const int hofokPin = 0;
-const int fenyPin = 1;
-const int piezoPin = 8;
+const int kintiVilagitas = 8;
+const int bentiVilagitas = 7;
+const int termosztatFutson = 6;
+const int pir = 13;
+const int hofokPin = A0;
+const int fenyPin = A1;
+const int piezoPin = 9;
+const int readyLedPin = 10;
 
 //hőfokméréshez
 const int numReadings = 10;         //hány mérést átlagoljon
@@ -44,6 +45,8 @@ void setup()
   pinMode(kintiVilagitas, OUTPUT);
   pinMode(bentiVilagitas, OUTPUT);
   pinMode(termosztatFutson, OUTPUT);
+  pinMode(piezoPin, OUTPUT);
+  pinMode(readyLedPin, OUTPUT);
   
   //bemenetek
   pinMode(pir, INPUT);
@@ -58,6 +61,7 @@ void setup()
 
   //benti világíáts kikapcsolva induljon
   digitalWrite(bentiVilagitas, HIGH);
+  digitalWrite(readyLedPin, HIGH);
   //kis szünet indulás előtt
   delay(500);
 }
