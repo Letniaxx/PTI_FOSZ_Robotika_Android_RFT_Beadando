@@ -27,11 +27,11 @@ int kivantHofok = 20;               //a kívánt hőfok a szobában
 int mozgasVan = 0;                  //érzékel-e mozgást a pir
 int riasztoBekapcsolva = 0;         //be van-e kapcsolva a roasztó
 int ertekGyujtemeny[4] = {0,0,0,0}; //értékek gyűjteménye ami elküldésre kerül
-int ertekGyujtemeny_[4] = {0,0,0,0}; 
-int fenyero = 0;                    //a fotoellenállás aktuális értéke
-int kintiVilagitasSzamlalo = 0;
-int kintiVilagitasIdotartam = 25;
-int kintiVilagitasFenyErzek = 300;
+int ertekGyujtemeny_[4] = {0,0,0,0};//átmeneti tároló a változás vizsgálatához
+int fenyero = 0;                    //a fotoellenállás értéke
+int kintiVilagitasSzamlalo = 0;     //ez az érték kövekszik ciklusonként
+int kintiVilagitasIdotartam = 25;   //meddig világítson a kinti világítás (nem mp.)
+int kintiVilagitasFenyErzek = 300;  //hol legyen a sötét / világos fordulópont
 
 
 void setup()
@@ -68,16 +68,16 @@ void setup()
 
 void loop()
 {       
-  hofokMeres();                 //eredménye az: average
-  lcdKijelzes();                //LCD kijelző frissítése
-  bluetoothEsemenyek();         //bejövő parancsok figyelése
-  kazanVezerles();              //hőfokok függvényében ki és bekapcsolja a kazánt
-  mozgasErzekeles();   
-  kintiVilagitasVezerles();         
-  riasztoVezerles();
-  ertekekOsszegyujtese();            //változók értékeit összegyűjti egy tömbbe
-  ertekekValtozasanakEllenorzese();  //a tömb tartalmát serialon elküldi
-  delay(200);                        //kis szünet 
+  hofokMeres();                       //eredménye az: average
+  lcdKijelzes();                      //LCD kijelző frissítése
+  bluetoothEsemenyek();               //bejövő parancsok figyelése
+  kazanVezerles();                    //hőfokok függvényében ki és bekapcsolja a kazánt
+  mozgasErzekeles();                  //figyeli, hogy van-e mozgás
+  kintiVilagitasVezerles();           //ez egy számláló, hogy egy idő után kapcsoljon le   
+  riasztoVezerles();                  //figyeli, hogy be van-e kapcs. a riasztó és van-e mozgás
+  ertekekOsszegyujtese();             //változók értékeit összegyűjti egy tömbbe
+  ertekekValtozasanakEllenorzese();   //a tömb tartalmát serialon elküldi ha változott valami
+  delay(200);                         //kis szünet 
 }
 
 void hofokMeres()
@@ -96,20 +96,18 @@ void hofokMeres()
 }
 
 void lcdKijelzes()
-{
-  //lcd.clear();
+{  
   lcd.setCursor(0,0);
   lcd.print("Temp:");  
   lcd.setCursor(9,0);  
   lcd.print("Set:"); 
   lcd.setCursor(0,1);
-  lcd.print("Alarm:"); 
-  
+  lcd.print("Alarm:");   
   lcd.setCursor(6,0);
   lcd.print(average);  
   lcd.setCursor(14,0);
-  lcd.print(kivantHofok);
-  //RIASZTÓ
+  lcd.print(kivantHofok);  
+  //Riasztó állapot
   lcd.setCursor(7,1);
   if (riasztoBekapcsolva == 0)
   {
@@ -119,7 +117,7 @@ void lcdKijelzes()
   {
     lcd.print("ON ");
   }
-  //MOZGÁS
+  //Mozgás állapot
   lcd.setCursor(11,1);  
   if (mozgasVan == 0)
   {
@@ -140,10 +138,10 @@ void bluetoothEsemenyek()
               
         switch(btFogadottAdat)
         {
-          case 'a':   digitalWrite(bentiVilagitas, LOW);   
+          case 'a':   digitalWrite(bentiVilagitas, LOW);   //a relék LOW-on vannak bekapcsolva
                       break;
           
-          case 'b':   digitalWrite(bentiVilagitas, HIGH);         
+          case 'b':   digitalWrite(bentiVilagitas, HIGH);  //HIGH-on pedig ki      
                       break;
     
           case 'c':   kintiVilagitasOn();
@@ -164,8 +162,8 @@ void bluetoothEsemenyek()
           case 'h':   riasztoBekapcsolva = 0;
                       break;
 
-          case 'i':   ertekekKuldese();
-                      break;
+          case 'i':   ertekekKuldese(); //amikor az android onResume-ja meghívódik,
+                      break;            //akkor friss adatokat kér a háztól
           
           default:    break;
         }
