@@ -1,50 +1,34 @@
 Smart Home - Funkcionális Specifikáció
 
-Áttekintés:
+Mûködés leírás:
+---------------
+A projekt egy okosotthon vezérlését valósítja meg, mely két fõbb részbõl áll. Egy mikrokonktrollerbõl és egy 
+okostelefon alkalmazásból (továbbiakban telefon).
+Az eszköz egy ATMega328P által vezérelt elektronika, mely egy bluetooth modulon keresztül kapcsolódik az 
+androidos okostelefonhoz megírt vezérlõ alkalmazáshoz.
 
-A projekt egy okosotthon vezérlését valósítja meg, mely két fõbb részbõl áll. Egy mikrokonktrollerbõl és egy okostelefon alkalmazásból.
-Fõbb funkciói:
-- Világítás fel és lekapcsolása
-- Riasztó, mozgásérzékelõ kapcsolása
-- Hõfokszabályozás
-- Bluetooth kezelés
+Fõbb funkciók:
 
-Szerver oldal (mikrokontroller)
+- Világításvezérlés:
+Kinti és benti világítás vezérlésére van lehetõség. A kinti világítás egy idõzítõvel van ellátva, mely letelte 
+után automatikusan lekapcsol. Felkapcsolására telefonon keresztül van lehetõség, valamint ha a fényerõsség 
+érzékelõ fotoellenállás sötétet érzékel, valamint egyidejûleg a pir mozgásérzékelõ szenzor is aktiválódik 
+akkor is felkapcsol. Amint a mozgás megszûnik elindul a számláló és a letelte után lekapcsolódik, valamint a 
+telefonon is van egy erre való gomb (a számlálót a végállásba állítja).
+A benti világítás csak a telefonos alkalmazás által kapcsolható fel és le.
 
-Az eszköz egy Arduino legyen.
-Közöttük a kapcsolat Bluetooth-al legyen megoldva.
-Az Arduino legyen ellátva hõfokmérõvel.
-Ha a hõmérséklet a beállított érték alá esik akkor beindítja a kazánt.
-Csak akkor küldjön hõmérsékletinformációt a telefonra, ha az elõzõ értékhez képest változott.
-Érzékelje a fényerõt és a mozgást. Ha a riasztó éles, jelzést küld a telefonnak.
-Ezen érzékelõk értékeit mutassa a mikrokontroller LCD kijelzõjén.
+- Kazánvezérlés:
+Az eszköz fel van szerelve egy LM35-ös hõmérséklet szenzorral, mely figyeli a szobai hõmérsékletet. 
+A telefonos alkalmazásban be lehet állítani a szobában kívánt hõfokot és amennyiben ez kisebb a mértnél 
+a termosztát reléje behúz ami elindítja a kazánt. Ez egészen addig így marad, amíg a mért hõ meg nem 
+haladj a beállított értéket.
 
-Kliens oldal (telefon applikáció)
+- Riasztás funkció:
+A riasztás funkciót telefonról lehet be és kikapcsolni. Bekapcsolt állapotban amennyiben a pir mozgást 
+érzékel a buzzer csipogó hangot ad ki egészen addig amíg meg nem szûnik a mozgás, vagy ki nem kapcsoljuk 
+a riasztás funkciót.
 
-Az alkalmazás Android operációs rendszerre készüljön.
-Legyen kompatibilis 4.4-tõl felfelé.
-A telefon elforgatására az alkalmazás felülete igazodjon az orientációhoz. (fektetett nézet)
-Az alkalmazásba való lépéskor figyelmeztesse a felhasználót, hogy kapcsolja be a bluetooth-t a telefonján.
-Ha a bluetooth be van kapcsolva, mutasson egy gombot amivel a párosított eszközökhöz lehet kapcsolódni.
-Amennyiben ezek megtörténtek lépjen be a fõmenübe.
-
-A fõmenüben 4 gomb legyen látható: Világítás, Biztonság, Termosztát, Bluetooth.
-Az alkalmazás háttere legyen fehér.
-A gombok színe legyen a narancssárga egy sötét árnyalata és a felirat legyen vastagon szedett fekete.
-A gombok legyenek középre igazítva és ne töltsék ki a képernyõ teljes szélességét.
-A képernyõ felsõ részében a SMART HOME felirat legyen látható egy okosotthonra utaló képre írva.
-
-Világítás:
-A kül és beltéri lámpákat lehessen fel, illetve lekapcsolni 2-2 gombal.
-
-Biztonság:
-A riasztó élesítésére és kikapcsolására tartalmazzon két gombot.
-Legyen egy ikon vagy piktogram ami a mozgásérzékelõ visszajelzésére szolgáljon.
-
-Termosztát:
-Mutassa a jelenlegi szobahõmérsékletet.
-Mutassa a beállított, kívánt hõfokot, illetve ez legyen változtatható két gomb segítségével.
-
-Bluetooth:
-A Bluetoot kapcsolatok kezelésére szolgáló menüpont.
-Párosítás, kapcsolat, stb.
+- LCD kijelzõ:
+2 x 16 karakteres LCD kijelzõ van az eszközhoz kapcsolva. A felsõ sorban az aktuális és a kívánt hõfokot 
+jelzi ki, az alsó sorban pedig a riasztó állapotát, hogy be van-e kapcsolva, valamint hogy a pir szenzor 
+érzékel-e éppen mozgást.
