@@ -8,7 +8,7 @@ Ajánlattevő bemutatása:
 Az Asdinátorok Development Kft. már 2003 óta piacvezető a szakmában,
 többek közt dolgozunk a B0sch Gmbh-nak, az Aubi autóipari Kft-nek,
 szoftverfejlesztést, webszerkesztést, mobil programozást, valamint
-mikrokontrolleres beágyazott rendszeres tervezését, kivitelezését vállaljuk.
+mikrokontrolleres beágyazott rendszerek tervezését, kivitelezését vállaljuk.
 
 
 Funkcionális specifikáció:
