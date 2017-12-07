@@ -1,0 +1,81 @@
+Ajánlat:
+--------
+--------
+
+Ajánlattevő bemutatása:
+-----------------------
+
+Az Asdinátorok Development Kft. már 2003 óta piacvezető a szakmában,
+többek közt dolgozunk a B0sch Gmbh-nak, az Aubi autóipari Kft-nek,
+szoftverfejlesztést, webszerkesztést, mobil programozást, valamint
+mikrokontrolleres beágyazott rendszeres tervezését, kivitelezését vállaljuk.
+
+
+Funkcionális specifikáció:
+--------------------------
+
+A projekt egy okosotthon vezérlését valósítja meg, mely két főbb részből áll. Egy mikrokonktrollerből és egy 
+okostelefon alkalmazásból (továbbiakban telefon).
+Az eszköz egy ATMega328P által vezérelt elektronika, mely egy bluetooth modulon keresztül kapcsolódik az 
+androidos okostelefonhoz megírt vezérlő alkalmazáshoz.
+
+Főbb funkciók:
+
+ - Világításvezérlés:
+   Kinti és benti világítás vezérlésére van lehetőség. A kinti világítás egy időzítővel van ellátva, mely letelte 
+   után automatikusan lekapcsol. Felkapcsolására telefonon keresztül van lehetőség, valamint ha a fényerősség 
+   érzékelő fotoellenállás sötétet érzékel, valamint egyidejűleg a pir mozgásérzékelő szenzor is aktiválódik 
+   akkor is felkapcsol. Amint a mozgás megszűnik elindul a számláló és a letelte után lekapcsolódik, valamint a 
+   telefonon is van egy erre való gomb (a számlálót a végállásba állítja).
+   A benti világítás csak a telefonos alkalmazás által kapcsolható fel és le.
+
+ - Kazánvezérlés:
+   Az eszköz fel van szerelve egy LM35-ös hőmérséklet szenzorral, mely figyeli a szobai hőmérsékletet. 
+   A telefonos alkalmazásban be lehet állítani a szobában kívánt hőfokot és amennyiben ez kisebb a mértnél 
+   a termosztát reléje behúz ami elindítja a kazánt. Ez egészen addig így marad, amíg a mért hő meg nem 
+   haladj a beállított értéket.
+
+ - Riasztás funkció:
+   A riasztás funkciót telefonról lehet be és kikapcsolni. Bekapcsolt állapotban amennyiben a pir mozgást 
+   érzékel a buzzer csipogó hangot ad ki egészen addig amíg meg nem szűnik a mozgás, vagy ki nem kapcsoljuk 
+   a riasztás funkciót.
+
+ - LCD kijelző:
+   2 x 16 karakteres LCD kijelző van az eszközhoz kapcsolva. A felső sorban az aktuális és a kívánt hőfokot 
+   jelzi ki, az alsó sorban pedig a riasztó állapotát, hogy be van-e kapcsolva, valamint hogy a pir szenzor 
+   érzékel-e éppen mozgást.
+
+
+Árajánlat:
+----------
+_____________________________________________________________________________________________
+
+                                        Fő Megrendelő:
+Dobozi András							magánfél
+Eged Zsolt							
+Bíró Patrik
+Balázs Gergő
+______________________________________________________________________________________________
+Megnevezés                              MunkaDíj       AnyagÁr
+
+Okosház alap                            40.000 Ft      10.000 Ft
+______________________________________________________________________________________________
+Munkadíj és anyagköltség:               40.000 Ft      10.000 Ft
+
+	Összesen:                           50.000 Ft
+	ÁFA öszeg                0% (+):         0 Ft
+
+Az ÁFA törvény §(1) bekezdés b) pontja szerinti szolgáltatás, az ÁFÁ-t a megrendelő fizeti!
+
+			Ajánlatunk 30 napig érvényes.
+
+Eger, 2017.11.01.                          ......................
+                                                 Cégvezető
+												 
+												 
+Feltételek a megrendelő felé:
+-----------------------------
+
+ - Technikai jellegű kérdéseimre 1 napon belül válaszoljanak
+ - Az átadott szoftverekhez frissítéseket, csakis az "Asdinátorok Development Kft." fejleszthet frissítéseket
+ - Ajánlatunkat 30 naptári napig tartjuk fent

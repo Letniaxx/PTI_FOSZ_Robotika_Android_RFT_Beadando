@@ -1,24 +1,17 @@
-﻿Arduino által vezérelt okosház
-------------------------------
+Ajánlatkérés:
+-------------
+-------------
 
-Biztonsági és automatizálási funkciók bluetoothon keresztül az Androidos telefonunkkal.
+Követelmény specifikáció:
+-------------------------
 
-URL: https://github.com/dbzmonty/PTI_FOSZ_Robotika_Android_RFT_Beadando
-
-Tagok: 
-Dobozi András
-Eged Zsolt
-Bíró Patrik
-Balázs Gergő
-
---------------------------------------------------------------------------------
 Leírás:
 
 Egy elektronika által vezérelt okosház vezérlőt kell megvalósítani.
 Ennek több funkciója legyen: 
 
  - Beltéri- és kültéri lámpa irányítás, amiket telefonon keresztül be- és kikapcsolhatunk,
-valamint sötétben mozgás esetén kapcsolódjon fel az adott lámpa 3 másodpercig.
+valamint sötétben mozgás esetén kapcsolódjon fel az adott lámpa.
 
  - Legyen megvalósítva riasztó, ami aktív állapot bekapcsolása után mozgásra 
 riaszt, és ezt jelzi hanghatással, majd telefonra is küld értesítést erről az állapotról.
@@ -30,6 +23,23 @@ Emellett mindig jelezze ki az aktuális hőmérséletett telefonon, és egy kül
 A telefonos program kommunikáljon a rendszerrel, kapjon információt a riasztó állapotáról, 
 hőfokról, és ha kell akkor be/ki kapcsolhassuk vele a kültéri és beltéri lámpákat, 
 valamint a hőfokot tudjuk kezelni vele. 
-Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta. 
+Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta.
 
-Az egész, munkadíjjal együtt ne kerüljön többe, mint 50.000 Ft.
+
+Ajánlatot adhat:
+----------------
+
+Az ajánlatadónak legalább:
+ - legyen 3 éve bejegyzett vállalkozása
+ - ne szerepeljen BAR-listán
+ - képes legyen a projektet 60 nap alatt megvalósítani
+ 
+
+Pénzügyek:
+----------
+
+ - Az egész, munkadíjjal együtt ne kerüljön többe, mint 50.000 Ft. 
+ - Késedelem esetén, a határidő lejárta után, naponta 1.000 Ft. kötbért
+   köteles fizetni a nyertes pályázó
+   
+   
