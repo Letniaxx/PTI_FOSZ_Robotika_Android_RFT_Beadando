@@ -1,0 +1,114 @@
+Tesztelési terv:
+----------------
+----------------
+
+Rendszerteszteléshez kapcsolódó határidők:
+------------------------------------------
+	
+Funkciótesztek:	
+
+	- Általános funkcionális teszt:		2017.12.10.
+	- Szélsőérték funkcionális teszt:	2017.12.11.
+	
+Teljesítményteszt:
+
+	- Nagy mennyiségű bemenő adat:		2017.12.12.
+
+Tesztelési jegyzőkönyv elkészülte:		2017.12.13.
+	
+
+
+Tesztelési folyamat leírása:
+----------------------------
+
+Funkciótesztek:	
+
+	- Általános funkcionális teszt:
+	
+		- Az általános funkcionális teszt az alkalmazás telepítésével kezdődik.
+		- Sikeres telepítés után elindítjuk és a Bluetooth csatlakozási felületen csatlakozunk az okosházhoz.		
+		- A világítások tesztelése a beltéri világítás be-kikapcsolásával kezdődik, ezt elvégezzük tízszer.		
+		- Utána a kültéri világítással folytatjuk. Bluetooth-szal felkapcsoljuk és kivárjuk, hogy 3mp után
+		  lekapcsol-e magától. Utána újra felkapcsoljuk és kipróbáljuk a kikapcsoló gombot is. Ezek után
+		  jöhet a mozgásérzékelés. Besötétítünk majd mozgunk a szenzor előtt és ellenőrizzük felkapcsol-e.		
+		- Termosztát ellenőrzés. Megnézzük hány fokon áll az aktuális hőfok, majd feljebb állítjuk a kívánt
+		  hőfokot. Ekkor el kell indulnia a fűtésnek, amit a házon belüli vörös fény szimbolizál. Ha elindult
+		  akkor imitáljuk a szoba hőfokának emelkedését olyan módon, hogy megfogjuk a termisztort kézzel.
+		  Amint feljebb ment az aktuális hőfok a kívántnál, ki kell kapcsolnia a fűtésnek. Ekkor elengengedjük
+		  a termisztort és várjuk, hogy a kívánt alá süllyedjen az aktuális hőfok. Ekkor újra fel kell kapcsolódnia
+		  a vörös fénynek.
+		- Riasztó ellenőrzés. A riasztás funkció alapértelmezetten ki van kapcsolva. Ekkor a mobil alkalmazásnak
+		  nyugalmi helyzetben egy kis fekete házat kell mutatnia. Mozgás esetén pedig egy kis zöld emberkét.
+		  Amint bekapcsoljuk a riasztót és ha a pir mozgást érzékel akkor szaggatottan csipognia kell, a telefon
+		  kijelzőjén pedig egy piros figyelmeztetőjelzés jelenik meg. Amint a mozgás abbamaradt, rá 3mp-re a
+		  riasztás abbamarad.	
+	
+	- Szélsőérték funkcionális teszt:
+	
+		Szélsőérték teszten a hőmérséklet érzékelést tudjuk tesztelni. Az okosház modellt először egy 5°C
+		hőmérsékletű hűtőkamrába tesszük és ellenőrizzük, hogy megfelelően méri-e a hőt. Ha ez megvan, akkor
+		át kell vinni egy melegebb helyiségbe, majd hősugárzóval nem több, mint 60°C-kal fűteni a nyáklapot.
+		Ha az értékek itt is pontosak, akkor átment a teszten.
+	
+Teljesítményteszt:
+
+	- Nagy mennyiségű bemenő adat:
+	
+		Ezt a tesztet a következőképpen lehet elvégezni. Adott egy 2 perces (60mp) időintervallum, és ez alatt
+		120 gombnyomást kell elvégezni a mobilos felületen és közben figyelni, hogy megfelelően működik-e a ház.
+		Ha nem akad ki, nem fagy le, akkor a teszt sikeres.
+	
+	
+Tesztelési jegyzőkönyv:
+-----------------------
+-----------------------
+
+Az elfogadható működőképesség ismérvei:
+---------------------------------------
+
+	A tesztelési jegyzőkönyv mezői 98%-ban MEGFELELT minősítésűek, azaz a követelmény specifikációban a felek
+    által kölcsönösen elfogadott funkciók működnek.
+
+A tesztelést végzők:
+--------------------
+
+Dobozi András (dbzmonty@gmail.com)
+Eged Zsolt    (sont16@gmail.com)
+Bíró Patrik   (biropatrik9612@gmail.com)
+Balázs Gergő  (gregyx101@gmail.com)
+
+Teszt:
+------
+
+---------------------------------------------------------
+| Általános funkcionális teszt:   |           |         |
+| - telepítés                     | MEGFELELT |  1 perc |
+|-------------------------------------------------------|
+| Általános funkcionális teszt:   |           |         |
+| - csatlakozás                   | MEGFELELT |  1 perc |
+|-------------------------------------------------------|
+| Általános funkcionális teszt:   |           |         |
+| - beltéri világítás             | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Általános funkcionális teszt:   |           |         |
+| - kültéri világítás             | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Általános funkcionális teszt:   |           |         |
+| - termosztát ellenőrzés         | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Általános funkcionális teszt:   |           |         |
+| - riasztó ellenőrzés            | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Szélsőérték funkcionális teszt: |           |         |
+| - alsó határ ellenőrzés         | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Szélsőérték funkcionális teszt: |           |         |
+| - felső határ ellenőrzés        | MEGFELELT | 10 perc |
+|-------------------------------------------------------|
+| Teljesítményteszt:              |           |         |
+| - nagy mennyiségű bemenő adat   | MEGFELELT | 10 perc |
+---------------------------------------------------------
+
+A teszt sikeresen zárult, minden funkció megfelelően működik.
+
+Eger, 2017.12.12.

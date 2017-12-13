@@ -104,7 +104,7 @@ void loop()
   kazanVezerles();                    //hõfokok függvényében ki és bekapcsolja a kazánt
   mozgasErzekeles();                  //figyeli, hogy van-e mozgás
   kintiVilagitasVezerles();           //ez egy számláló, hogy egy idõ után kapcsoljon le   
-  riasztoVezerles();                  //figyeli, hogy be van-e kapcs. a riasztó és van-e mozgás
+  riasztoVezerles();                  //figyeli, hogy be van-e kapcsolva a riasztó és van-e mozgás
   ertekekOsszegyujtese();             //változók értékeit összegyûjti egy tömbbe
   ertekekValtozasanakEllenorzese();   //a tömb tartalmát serialon elküldi ha változott valami
   delay(200);                         //kis szünet 
@@ -192,8 +192,8 @@ void bluetoothEsemenyek()
           case 'h':   riasztoBekapcsolva = 0;
                       break;
 
-          case 'i':   ertekekKuldese(); //amikor az android onResume-ja meghívódik,
-                      break;            //akkor friss adatokat kér a háztól
+          case 'i':   ertekekKuldese(); 			//amikor az android onResume-ja meghívódik,
+                      break;            			//akkor friss adatokat kér a háztól
           
           default:    break;
         }

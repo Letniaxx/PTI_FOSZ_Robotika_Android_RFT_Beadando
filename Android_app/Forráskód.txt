@@ -1,0 +1,948 @@
+AndroidManifest.xml
+-------------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="arduinosensors.example.com.smarthome3">
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="arduinosensors.example.com.smarthome3.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"  >
+
+        </activity>
+
+        <activity
+            android:name="arduinosensors.example.com.smarthome3.DeviceListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+
+DeviceListActivity.java
+-----------------------
+
+package arduinosensors.example.com.smarthome3;
+
+import java.util.Set;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+
+
+public class DeviceListActivity extends Activity {
+    // Debugging for LOGCAT
+    private static final String TAG = "DeviceListActivity";
+    private static final boolean D = true;
+
+    // declare button for launching website and textview for connection status
+    Button tlbutton;
+    TextView textView1;
+
+    // EXTRA string to send on to mainactivity
+    public static String EXTRA_DEVICE_ADDRESS = "device_address";
+
+    // Member fields
+    private BluetoothAdapter mBtAdapter;
+    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.device_list);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //***************
+        checkBTState();
+
+        textView1 = (TextView) findViewById(R.id.connecting);
+        textView1.setTextSize(40);
+        textView1.setText(" ");
+
+        // Initialize array adapter for paired devices
+        mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+
+        // Find and set up the ListView for paired devices
+        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        pairedListView.setAdapter(mPairedDevicesArrayAdapter);
+        pairedListView.setOnItemClickListener(mDeviceClickListener);
+
+
+        // Get the local Bluetooth adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Get a set of currently paired devices and append to 'pairedDevices'
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+
+        // Add previosuly paired devices to the array
+        if (pairedDevices.size() > 0) {
+            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);//make title viewable
+
+            for (BluetoothDevice device : pairedDevices) {
+
+                Spanned BTnev = (Html.fromHtml(device.getName()));
+                String BTcim = device.getAddress();
+                String osszeg = BTnev + "\n" +BTcim;
+                mPairedDevicesArrayAdapter.add(osszeg);
+            }
+        } else {
+            String noDevices = getResources().getText(R.string.none_paired).toString();
+            mPairedDevicesArrayAdapter.add(noDevices);
+        }
+    }
+
+    // Set up on-click listener for the list (nicked this - unsure)
+    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+
+            textView1.setText("Csatlakozás...");
+            // Get the device MAC address, which is the last 17 chars in the View
+            String info = ((TextView) v).getText().toString();
+            String address = info.substring(info.length() - 17);
+
+            // Make an intent to start next activity while taking an extra which is the MAC address.
+            Intent i = new Intent(DeviceListActivity.this, MainActivity.class);
+            i.putExtra(EXTRA_DEVICE_ADDRESS, address);
+            startActivity(i);
+        }
+    };
+
+    private void checkBTState() {
+        // Check device has Bluetooth and that it is turned on
+        mBtAdapter=BluetoothAdapter.getDefaultAdapter(); // CHECK THIS OUT THAT IT WORKS!!!
+        if(mBtAdapter==null) {
+            Toast.makeText(getBaseContext(), "Device does not support Bluetooth", Toast.LENGTH_SHORT).show();
+        } else {
+            if (mBtAdapter.isEnabled()) {
+                Log.d(TAG, "...Bluetooth ON...");
+            } else {
+                //Prompt user to turn on Bluetooth
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+
+            }
+        }
+    }
+}
+
+MainActivity.java
+-----------------
+
+package arduinosensors.example.com.smarthome3;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+    TextView sensorView2, sensorView3;
+    Handler bluetoothIn;
+
+    final int handlerState = 0;        				 //used to identify handler message
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothSocket btSocket = null;
+    private StringBuilder recDataString = new StringBuilder();
+
+    private ConnectedThread mConnectedThread;
+
+    // SPP UUID service - this should work for most devices
+    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    // String for MAC address
+    private static String address;
+
+    //Állapot jelzés:
+    ImageView img_jelzes;
+
+    @SuppressLint("HandlerLeak")
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        //Link the buttons and textViews to respective views
+
+        //gombok világítás
+        Button btn_belteri_be = findViewById(R.id.btn_belteri_be);
+        Button btn_belteri_ki = findViewById(R.id.btn_belteri_ki);
+        Button btn_kulteri_be = findViewById(R.id.btn_kulteri_be);
+        Button btn_kulteri_ki = findViewById(R.id.btn_kulteri_ki);
+
+        //gombok termosztát
+        Button btn_set_up = findViewById(R.id.btn_set_up);
+        Button btn_set_down = findViewById(R.id.btn_set_down);
+
+        //gombok riasztó
+        final Button btn_sec_on = findViewById(R.id.btn_sec_on);
+        Button btn_sec_off = findViewById(R.id.btn_sec_off);
+
+        sensorView2 = (TextView) findViewById(R.id.sensorView2);
+        sensorView3 = (TextView) findViewById(R.id.sensorView3);
+
+        //Állapot jelzés:
+        final ImageView img_jelzes = (ImageView)findViewById(R.id.imageView);
+
+        bluetoothIn = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                if (msg.what == handlerState) {										//if message is what we want
+                    String readMessage = (String) msg.obj;                                // msg.arg1 = bytes from connect thread
+                    recDataString.append(readMessage);      								//keep appending to string until @
+                    int endOfLineIndex = recDataString.indexOf("@");                    // determine the end-of-line
+                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
+                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
+
+                        int dataLength = dataInPrint.length();							//get length of data received
+
+
+                        if (recDataString.charAt(0) == '#')								//if it starts with # we know it is what we are looking for
+                        {
+                            String sensor0 = recDataString.substring(1, 2);             //get sensor value from string between indices 1-5
+                            String sensor1 = recDataString.substring(3, 4);            //same again...
+                            String sensor2 = recDataString.substring(5, 7);
+                            String sensor3 = recDataString.substring(8, 10);
+
+                            int sen0=0;
+                            int sen1=0;
+
+                            sensorView3.setText(sensor3 + "°C");	//update the textviews with sensor values
+                            sensorView2.setText(sensor2 + "°C");
+                            //sensorView0.setText(" Mozgás van: " +sensor0);
+                            //sensorView1.setText(" Riasztó bekapcs.= "+sensor1);
+
+                            try {
+                                sen0 = Integer.parseInt(sensor0);
+                                sen1 = Integer.parseInt(sensor1);
+                            } catch(NumberFormatException nfe) { }
+
+                            //Állapot visszajelzés:
+                            if(sen0 == 1 && sen1 == 1)
+                            {
+                                img_jelzes.setImageResource(R.drawable.alert);
+                            }
+                            else if(sen0 ==1 && sen1 ==0)
+                            {
+                                img_jelzes.setImageResource(R.drawable.motion);
+                            }
+                            else
+                            {
+                                img_jelzes.setImageResource(R.drawable.house);
+                            }
+
+                            //Riasztó bekapcsolási állapota
+                            if (sen1 == 0)
+                            {
+                                btn_sec_on.setTextColor(Color.WHITE);
+                            }
+                            else
+                            {
+                                btn_sec_on.setTextColor(Color.RED);
+                            }
+                        }
+                        recDataString.delete(0, recDataString.length()); 					//clear all string data
+                        dataInPrint = " ";
+                    }
+                }
+            }
+        };
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
+        checkBTState();
+
+        //eseménykezelők világítás
+
+        btn_belteri_be.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("a");
+            }
+        });
+
+        btn_belteri_ki.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("b");
+            }
+        });
+
+        btn_kulteri_be.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("c");
+            }
+        });
+
+        btn_kulteri_ki.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("d");
+            }
+        });
+
+        //eseménykezelők termosztát
+
+        btn_set_up.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("e");
+            }
+        });
+
+        btn_set_down.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("f");
+            }
+        });
+
+        //eseménykezelők riasztó
+
+        btn_sec_on.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("g");
+            }
+        });
+
+        btn_sec_off.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mConnectedThread != null)
+                    mConnectedThread.write("h");
+            }
+        });
+    }
+
+
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+
+        return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
+        //creates secure outgoing connecetion with BT device using UUID
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //Get MAC address from DeviceListActivity via intent
+        Intent intent = getIntent();
+
+        //Get the MAC address from the DeviceListActivty via EXTRA
+        address = intent.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+
+        //create device and set the MAC address
+        BluetoothDevice device = btAdapter.getRemoteDevice(address);
+
+        try {
+            btSocket = createBluetoothSocket(device);
+        } catch (IOException e) {
+            Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_LONG).show();
+        }
+        // Establish the Bluetooth socket connection.
+        try
+        {
+            btSocket.connect();
+        } catch (IOException e) {
+            try
+            {
+                btSocket.close();
+            } catch (IOException e2)
+            {
+                //insert code to deal with this
+            }
+        }
+        mConnectedThread = new ConnectedThread(btSocket);
+        mConnectedThread.start();
+
+        //I send a character when resuming.beginning transmission to check device is connected
+        //If it is not an exception will be thrown in the write method and finish() will be called
+        mConnectedThread.write("i");
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        try
+        {
+            //Don't leave Bluetooth sockets open when leaving activity
+            btSocket.close();
+        } catch (IOException e2) {
+            //insert code to deal with this
+        }
+    }
+
+    //Checks that the Android device Bluetooth is available and prompts to be turned on if off
+    private void checkBTState() {
+
+        if(btAdapter==null) {
+            Toast.makeText(getBaseContext(), "Device does not support bluetooth", Toast.LENGTH_LONG).show();
+        } else {
+            if (btAdapter.isEnabled()) {
+            } else {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+        }
+    }
+
+    //create new class for connect thread
+    private class ConnectedThread extends Thread {
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        //creation of the connect thread
+        public ConnectedThread(BluetoothSocket socket) {
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            try {
+                //Create I/O streams for connection
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+
+        public void run() {
+            byte[] buffer = new byte[256];
+            int bytes;
+
+            // Keep looping to listen for received messages
+            while (true) {
+                try {
+                    bytes = mmInStream.read(buffer);        	//read bytes from input buffer
+                    String readMessage = new String(buffer, 0, bytes);
+                    // Send the obtained bytes to the UI Activity via handler
+                    bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+        //write method
+        public void write(String input) {
+            byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
+            try {
+                mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
+            } catch (IOException e) {
+                //if you cannot write, close the application
+                Toast.makeText(getBaseContext(), "Connection Failure", Toast.LENGTH_LONG).show();
+                finish();
+
+            }
+        }
+    }
+}
+
+device_list.xml
+---------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/title_paired_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#666"
+        android:paddingLeft="5dp"
+        android:text="Válassz egy párosított eszközt:"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#fff"
+        android:visibility="gone" />
+
+
+    <ListView
+        android:id="@+id/paired_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dip"
+        android:layout_marginVertical="10dip"
+        android:layout_weight="1"
+        android:stackFromBottom="false">
+
+    </ListView>
+
+
+
+    <TextView
+        android:id="@+id/connecting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Small" />
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dip"
+        android:text="Ha nincs egy eszköz sem, akkor párosíts a telefonnal"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+</LinearLayout>
+
+device_name.xml
+---------------
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+
+    android:textColor="#f9f9f9"
+    android:textSize="18sp"
+
+>
+</TextView>
+
+activity_main.xml
+-----------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_app"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="arduinosensors.example.com.smarthome3.MainActivity" android:baselineAligned="false">
+
+    <LinearLayout
+        android:id="@+id/lay_main"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="10dip">
+
+        <LinearLayout
+            android:id="@+id/lay_bt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="3dip"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="5dip">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay_lights"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="3dip"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:padding="5dip">
+
+            <LinearLayout
+                android:id="@+id/lay_lights_in"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_belteri_be"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dip"
+                    android:layout_marginVertical="5dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_skin"
+                    android:padding="10dp"
+                    android:text="Benti BE"
+                    android:textColor="#ffffff" />
+
+                <Button
+                    android:id="@+id/btn_belteri_ki"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dip"
+                    android:layout_marginVertical="5dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_skin"
+                    android:padding="10dp"
+                    android:text="Benti KI"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lay_lights_out"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_kulteri_be"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dip"
+                    android:layout_marginVertical="5dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_skin"
+                    android:padding="10dp"
+                    android:text="Kinti BE"
+                    android:textColor="#ffffff" />
+
+                <Button
+                    android:id="@+id/btn_kulteri_ki"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dip"
+                    android:layout_marginVertical="5dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_skin"
+                    android:padding="10dp"
+                    android:text="Kinti KI"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay_therm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="3dip"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:padding="5dip">
+
+            <LinearLayout
+                android:id="@+id/lay_therm_actual"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/lay_therm_actualC"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sensorView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:gravity="center"
+                        android:text="aktuál"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lay_therm_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_actual"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Aktuális hőfok"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lay_therm_set"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/lay_setC"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sensorView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="kívánt"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lay_set_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_set_up"
+                            style="@android:style/Widget.Button.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dip"
+                            android:layout_marginVertical="5dip"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_skin"
+                            android:padding="10dp"
+                            android:text="Hőfok +"
+                            android:textColor="#ffffff" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_set_down"
+                            style="@android:style/Widget.Button.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dip"
+                            android:layout_marginVertical="5dip"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_skin"
+                            android:padding="10dp"
+                            android:text="Hőfok -"
+                            android:textColor="#ffffff" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay_sec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="3dip"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:padding="5dip">
+
+            <LinearLayout
+                android:id="@+id/lay_sec_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="false"
+                    android:contentDescription="@string/desc"
+                    android:cropToPadding="false"
+                    android:padding="10dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lay_sec_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/lay_sec_on"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_sec_on"
+                        style="@android:style/Widget.Button.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="5dip"
+                        android:layout_marginVertical="5dip"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_skin"
+                        android:padding="10dp"
+                        android:text="Riaszto BE"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lay_sec_off"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_sec_off"
+                        style="@android:style/Widget.Button.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="5dip"
+                        android:layout_marginVertical="5dip"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_skin"
+                        android:padding="10dp"
+                        android:text="Riaszto KI"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+colors.xml
+----------
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+</resources>
+
+strings.xml
+-----------
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Smart Home Controller</string>
+    <string name="action_settings">Beállítások</string>
+    <string name="hello_world">Hello world!</string>
+	 <string name="none_paired">Nincs párosított eszköz!</string>
+    <string name="desc">desc</string>
+</resources>
+
+styles.xml
+----------
+
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+</resources>
