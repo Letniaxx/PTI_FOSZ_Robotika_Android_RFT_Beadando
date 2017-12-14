@@ -15,11 +15,26 @@ Funkcionális specifikáció:
 --------------------------
 
 A projekt egy okosotthon vezérlését valósítja meg, mely két főbb részből áll. Egy mikrokonktrollerből és egy 
-okostelefon alkalmazásból (továbbiakban telefon).
+okostelefon alkalmazásból.
 Az eszköz egy ATMega328P által vezérelt elektronika, mely egy bluetooth modulon keresztül kapcsolódik az 
 androidos okostelefonhoz megírt vezérlő alkalmazáshoz.
+A vezérlést és annak részeit Arduinoval mely egy könnyen programozható áramkörvezérlő egység és az ezzel 
+kompatibilis modulokkal valósítjuk meg. 
+Az eszközt átlagosan 10°C és 35°C hőfok közti működésre tervezzük.
+Az eszköz nem vízálló, de maximálisan 70%-os páratartalomban helyt áll.
+A Telefonos alkalmazást Android operációs rendszerrel futó okostelefon-készülékekre készítjük el, így minden Androidos okostelefonon, 
+melynek az Android verziója 2.3.3. vagy ennél naprakészebb veziójú és rendelkezik bluetooth modullal hibátlanul működni fog.
 
 Főbb funkciók:
+
+Előreláthatólag az Androidos alkalmazás főmenüjén meg fog jelenni az alkalmazás logója, lámpák ki-be kapcsolására szolgáló
+gombok, termosztát állításához szükséges kívánt hőfok fel és kívánt hőfok le szabályzó gombok, a jelenlegi és beállított
+hőfok értéke, riasztó ki-be kapcsolására szolgáló gombok és egy mozgást vagy betolakodót jelző indikátor.
+A betolakodót jelző indikátor csak akkor fog megjelenni ha a mozgásérzékelő a riasztó bekapcsolt állapotának alkalmával
+mozgást érzékel. Amennyiben éppen nincsen mozgás a telefonunkon ezt is egy újabb fajta indikátor fogja jelezni.
+Az itt látható értékeket, nevezetesen a kívánt illetve jelenlegi hőfok, a pillanatnyi érzékelt hőfok és az
+indikátor állapotát változtató értékeket folyamatos időközönként a mikrokontrollertől kéri le az alkalmazás, illetve ezen
+értékek változtatása esetén sem egy másik értéket ad át, hanem meghívja az érték változtatásához szükséges metódust.
 
  - Világításvezérlés:
    Kinti és benti világítás vezérlésére van lehetőség. A kinti világítás egy időzítővel van ellátva, mely letelte 
@@ -33,7 +48,9 @@ Főbb funkciók:
    Az eszköz fel van szerelve egy LM35-ös hőmérséklet szenzorral, mely figyeli a szobai hőmérsékletet. 
    A telefonos alkalmazásban be lehet állítani a szobában kívánt hőfokot és amennyiben ez kisebb a mértnél 
    a termosztát reléje behúz ami elindítja a kazánt. Ez egészen addig így marad, amíg a mért hő meg nem 
-   haladj a beállított értéket.
+   haladj a beállított értéket. Tehát ha a kívánt érték 22°C és a jelenlegi hőfok 21°C vagy kevesebb, akkor
+   elindul a kazán, mely csak akkor fog kikapcsolt állapotba lépni, ha túllépi a kívánt értéket, tehát eléri
+   a 23°C-t.
 
  - Riasztás funkció:
    A riasztás funkciót telefonról lehet be és kikapcsolni. Bekapcsolt állapotban amennyiben a pir mozgást 
@@ -45,6 +62,9 @@ Főbb funkciók:
    jelzi ki, az alsó sorban pedig a riasztó állapotát, hogy be van-e kapcsolva, valamint hogy a pir szenzor 
    érzékel-e éppen mozgást.
 
+Mivel a működő eszközt és alkalmazást működés közben be kellene majd mutatni és még nem vagyunk képesek valós méretű 
+házak mozgatására, így parkettalapokból és egyéb faanyagokból tervezünk egy modell házat, melybe bele tudjuk szerelni
+a vezérlést, könnyítve az eszköz való életben való szereplésének szimulálását és bemutatását.
 
 Árajánlat:
 ----------
@@ -79,3 +99,4 @@ Feltételek a megrendelő felé:
  - Technikai jellegű kérdéseimre 1 napon belül válaszoljanak
  - Az átadott szoftverekhez frissítéseket, csakis az "Asdinátorok Development Kft." fejleszthet frissítéseket
  - Ajánlatunkat 30 naptári napig tartjuk fent
+ 
