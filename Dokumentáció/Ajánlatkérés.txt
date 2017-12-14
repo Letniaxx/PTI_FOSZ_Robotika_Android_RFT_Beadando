@@ -65,7 +65,8 @@ az applikáció.
 
 A telefonos program kommunikáljon a rendszerrel, kapjon információt a riasztó állapotáról, 
 hőfokról, és ha kell akkor be/ki kapcsolhassuk vele a kültéri és beltéri lámpákat, 
-valamint a hőfokot tudjuk kezelni vele. 
+valamint a hőfokot tudjuk kezelni vele.
+Az elektronika vízállósága nem előírás. 
 
 Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta.
 
