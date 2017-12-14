@@ -1,28 +1,72 @@
-Ajánlatkérés:
+﻿Ajánlatkérés:
 -------------
 -------------
+Ajánlat kérő bemutatása:
+-----------------------
+NIS Computer kft.
+
+email: nis@system.hu
+telefon: 063056621111
+cím: 1142 Budapest, Erzsébet királyné útja 425.
+Cégjegyzékszám: 01-09-88888888
+Adószám: 111111111-2-42
+
+Bemutatkozás:
+Az Okos rendszerünk egy új réteg a Smart Home rendszerek és az érzékelők, illetve a beavatkozók között.
+Hidat képez a ház eszközei és más okosotthon gyártók központi vezérlői között. 
+Szabad választást ad a felhasználónak és jelentősen csökkenti a beépítési költséget.
+A Smart Home Ready technológiának köszönhetően az okosotthon központ kiválasztása nem elsődleges feladat. 
+A Okos rendszerünk alkalmazkodik igényeihez bármilyen központot is válasszon.
+Sőt mi több, a rendszer moduláris felépítésének köszönhetően otthona funkcióit bármikor kedvére bővítheti további kábelezés és falbontás nélkül.
 
 Követelmény specifikáció:
 -------------------------
 
 Leírás:
 
-Egy elektronika által vezérelt okosház vezérlőt kell megvalósítani.
-Ennek több funkciója legyen: 
+Egy elektronika által vezérelt okos ház vezérlőt kell megvalósítani, amit mobilon keresztül irányíthatunk,
+és kaphatunk információt az okos házról, mint például a hőmérsékletről, riasztó állapotáról, lámpák állapotáról.
+Olyan modellt kell készíteni ami imitálja a valóságot, hogyan működne ez egy családi ház esetében.
+A modellen bemutatható legyen minden funkció és tesztelhető legyen a különböző állapotok kialakulásának helyzete, 
+mint például mi történik akkor ha nagyon lecsökken a hőmérséklet, esetleg ha a riasztó bekapcsolt állapotában mozgás 
+történik, behatolót észlel a rendszer.
+
+Okos háznak a következő főbb funkciókkal kell rendelkeznie: 
 
  - Beltéri- és kültéri lámpa irányítás, amiket telefonon keresztül be- és kikapcsolhatunk,
-valamint sötétben mozgás esetén kapcsolódjon fel az adott lámpa.
+valamint sötétben mozgás esetén kapcsolódjon fel a kültéri lámpa egy bizonyos ideig.
+Külön - külön kapcsolható legyen a kinti és benti világítás, valamint fontos, hogy ha 
+mozgás hatására felkapcsolódott kinti lámpát lehetőség legyen lekapcsolni a mobilos alkalmazás 
+segítségével is. 
 
  - Legyen megvalósítva riasztó, ami aktív állapot bekapcsolása után mozgásra 
-riaszt, és ezt jelzi hanghatással, majd telefonra is küld értesítést erről az állapotról.
+riaszt, és ezt jelzi hang hatással, majd telefonra is küld értesítést erről az állapotról.
+A riasztót lehessen szintén ki - be kapcsolni a telefon segítségével, attól függően mikor 
+akarjuk védett állapotba helyezni a házat. Fontos, hogy telefonra is érkezzen értesítés a 
+riasztási állapotról, hisz így az illegális behatolás után pár másodpercel már értesülünk róla 
+és lehetőség nyillik az azonnali intézkedésekre. E funkció segítségével nagyobb az esélye annak, 
+hogy az illetőt hamarabb tetten érjék, és az eltulajdonított tárgyakat mihamarabb vissza juttassák a
+hatóságok. Tárgyak eltulajdonításának megakadályozásában is segítségünkre lehet ez a funckió, hisz a 
+riasztó figyelmeztető hangjára akár még meg is gondolhatja magát a behatoló, és nem tulajdonít el semmit, 
+inkább elhagyja a házat. 
 
  - Tudnia kell a hőfokot szabályozni, azaz a kívánt hőmérséklet beállítása után a kazánt 
 addig járassa, míg a szoba el nem éri a kívánt hőmérsékletet, utána kapcsoljon ki.
 Emellett mindig jelezze ki az aktuális hőmérséletett telefonon, és egy külön kijelzőn is.
+Ennek a funkció segítségével könnyedén, a ház bármely pontjából beállíthatjuk a kívánt hőmérsékletet, 
+így nem kell perceket kidobva elsétálni a kazánig és manuálisan állítani a hőfokon, hisz nem 
+mindig adódik arra lehetőségünk, szabad időnk, hogy elszaladjunk a kazánig, például ha nagy munkába 
+vagyunk belemerülve és elkezdett kihülni a lakás. Ekkor egyszerűen csak elővesszük a mobilunkat és 
+beállítjuk a kívánt hőfokot. Esetleges vendég látáskor sem akarnánk megzavarni azzal a vendégeket, hogy 
+a kazánhoz szaladgálunk, ennek elkerülése érdében is remek lehetőséget kínál ez a funkció.
+
+Androidos alkalmazásban legyen megvalósítva a vezérlés, azaz androidos mobilokon legyen elérhető 
+az applikáció.
 
 A telefonos program kommunikáljon a rendszerrel, kapjon információt a riasztó állapotáról, 
 hőfokról, és ha kell akkor be/ki kapcsolhassuk vele a kültéri és beltéri lámpákat, 
 valamint a hőfokot tudjuk kezelni vele. 
+
 Program kinézete legyen egyszerű és átlátható, a felhasználó könnyen eligazodhasson rajta.
 
 
