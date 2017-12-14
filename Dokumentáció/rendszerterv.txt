@@ -1,317 +1,64 @@
-A projektet kÈt rÈszre lehet bontani, melyek a VezÈrlÈs Ès annak rÈszei, Ès a Telefonos alkalmaz·s.
+A projektet k√©t r√©szre lehet bontani, melyek a Vez√©rl√©s √©s annak r√©szei, valamint a Telefonos alkalmaz√°s.
 
-VezÈrlÈshez haszn·lt elemek:
+Vez√©rl√©s:
+---------
+A vez√©rl√©st √©s annak r√©szeit Arduinoval mely egy k√∂nnyen programozhat√≥ √°ramk√∂rvez√©rl≈ë egys√©g
+√©s az ezzel kompatibilis modulokkal val√≥s√≠tjuk meg. 
+Mivel modellt kell k√©sz√≠teni, a kaz√°n m≈±k√∂d√©s√©t v√∂r√∂sen izz√≥ ledekkel szimul√°ljuk.
+
+Telefonos alkamaz√°s:
+--------------------
+A Telefonos alkalmaz√°st Android oper√°ci√≥s rendszerrel fut√≥ k√©sz√ºl√©kekre k√©sz√≠tj√ºk el, √≠gy minden Androidos okostelefonon, 
+melynek az Android verzi√≥ja 2.3.3. vagy enn√©l naprak√©szebb √©s rendelkezik bluetooth modullal hib√°tlanul m≈±k√∂dni fog.
+El≈ërel√°that√≥lag az Androidos alkalmaz√°s f≈ëmen√ºj√©n meg fog jelenni az alkalmaz√°s log√≥ja, l√°mp√°k ki-be kapcsol√°s√°ra szolg√°l√≥
+gombok, termoszt√°t √°ll√≠t√°s√°nak lehet≈ës√©ge, a jelenlegi √©s be√°ll√≠tott h≈ëfok, riaszt√≥ ki-be kapcsol√°s√°ra szolg√°l√≥ gombok
+√©s egy mozg√°st jelz≈ë indik√°tor.
+
+Vez√©rl√©shez haszn√°lt elemek:
 ----------------------------
 -ATMega328P mikrokontroller
--Bluetooth AdÛvevı (HC-05 Wireless Bluetooth RF Transceiver Module Serial RS232 TTL For Arduino)
--RelÈ modul (4 Channel Relay Board Module Optocoupler LED for Arduino)
+-Bluetooth Ad√≥vev≈ë (HC-05 Wireless Bluetooth RF Transceiver Module Serial RS232 TTL For Arduino)
+-Rel√© modul (4 Channel Relay Board Module Optocoupler LED for Arduino)
 
 Szenzorok:
 ----------
--Infravˆrˆs Mozg·sÈrzÈkelı Szenzor (HC-SR501 Infrared PIR Motion Sensor Module for Arduino)
--Digit·lis HıÈrzÈkelı Szenzor (4Pin Digital Thermal Thermistor Temperature Sensor Module for Arduino)
--FÈnyerı Szenzor (Photoresistor LDR CDS 5mm Light-Dependent Resistor Sensor GL5516)
+-Infrav√∂r√∂s Mozg√°s√©rz√©kel≈ë Szenzor (HC-SR501 Infrared PIR Motion Sensor Module for Arduino)
+-Digit√°lis H≈ë√©rz√©kel≈ë Szenzor (4Pin Digital Thermal Thermistor Temperature Sensor Module for Arduino)
+-F√©nyer≈ë Szenzor (Photoresistor LDR CDS 5mm Light-Dependent Resistor Sensor GL5516)
 
-EgyÈb elemek:
+Egy√©b elemek:
 -------------
--LCD kijelzı: (Blue IIC I2C TWI 1602 16x2 Serial LCD Module Display for Arduino)
--Piezo HangszÛrÛ (A riaszt·st demonst·lva)
--Led (x3) (A kinti Ès benti vil·gÌt·st, valamint a termoszt·tot demonstr·ciÛ cÈlj·bÛl ledekkel oldjuk meg.)
--Ezekhez sz¸ksÈges k·belek Ès ellen·ll·sok
+-LCD kijelz≈ë: (Blue IIC I2C TWI 1602 16x2 Serial LCD Module Display for Arduino)
+-Piezo Hangsz√≥r√≥ (A riaszt√°st demonst√°lva)
+-Led (x3) (A kinti √©s benti vil√°g√≠t√°st, valamint a termoszt√°tot demonstr√°ci√≥ c√©lj√°b√≥l ledekkel oldjuk meg.)
+-Ezekhez sz√ºks√©ges k√°belek √©s ellen√°ll√°sok
+
+Ezen fenti elemeket mindet modul√°risra szeretn√©nk tervezni, hogy tov√°bb b≈ëv√≠thet≈ëek legyenek a felhaszn√°l√≥ kedv√©re.
 
 Szoftverek:
 -----------
-VezÈrlÈs programoz·s·ra haszn·lt program: Arduino IDE 1.8.4
-Telefonos alkalmaz·s programoz·s·ra haszn·lt program: Android Studio 3.0
-A telefonos alkalmaz·s neve: Smart Home Controller
+Vez√©rl√©s programoz√°s√°ra haszn√°lt program: Arduino IDE 1.8.4
+Telefonos alkalmaz√°s programoz√°s√°ra haszn√°lt program: Android Studio 3.0
+A telefonos alkalmaz√°s neve: Smart Home Controller
 
-Forr·skÛd:
-----------
-
-#include <LiquidCrystal_I2C.h>                                    //lcd-hez kell
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    //lcd-hez kell
-
-//PIN-ek
-const int rxPin = 0;
-const int txPin = 1;
-const int kintiVilagitas = 8;
-const int bentiVilagitas = 7;
-const int termosztatFutson = 6;
-const int pir = 13;
-const int hofokPin = A0;
-const int fenyPin = A1;
-const int piezoPin = 9;
-const int readyLedPin = 10;
-
-//hıfokmÈrÈshez
-const int numReadings = 10;         //h·ny mÈrÈst ·tlagoljon
-int temp;                           //aktu·lis mÈrÈs
-int readings[numReadings];          //mÈrÈsek eredmÈnyei
-int readIndex = 0;                  //a tˆmb indexe
-int total = 0;                      //mÈrÈsek ˆsszege
-int average = 0;                    //mÈrÈsek ·tlaga, legpontosabb!!!
-
-//v·ltozÛk
-char btFogadottAdat = ' ';          //BT app ·ltal k¸ldˆtt karakter
-int kivantHofok = 20;               //a kÌv·nt hıfok a szob·ban
-int mozgasVan = 0;                  //ÈrzÈkel-e mozg·st a pir
-int riasztoBekapcsolva = 0;         //be van-e kapcsolva a roasztÛ
-int ertekGyujtemeny[4] = {0,0,0,0}; //ÈrtÈkek gy˚jtemÈnye ami elk¸ldÈsre ker¸l
-int ertekGyujtemeny_[4] = {0,0,0,0};//·tmeneti t·rolÛ a v·ltoz·s vizsg·lat·hoz
-int fenyero = 0;                    //a fotoellen·ll·s ÈrtÈke
-int kintiVilagitasSzamlalo = 0;     //ez az ÈrtÈk kˆvekszik ciklusonkÈnt
-int kintiVilagitasIdotartam = 25;   //meddig vil·gÌtson a kinti vil·gÌt·s (nem mp.)
-int kintiVilagitasFenyErzek = 300;  //hol legyen a sˆtÈt / vil·gos fordulÛpont
-
-
-void setup()
-{  
-  Serial.begin(9600);
-  delay(200);  
-  lcd.begin(16,2);
-  lcd.backlight();  
+El≈ërel√°that√≥lag sz√ºks√©ges met√≥dusok felv√°zol√°sa:
+------------------------------------------------
+Arduinoban:
+-----------
+  H≈ëfokm√©r√©s.
+  LCD kijelz≈ëre ki√≠r√°s.
+  Bluetooth parancsok figyel√©se.
+  Kaz√°nvez√©rl√©s.
+  Mozg√°sfigyel√©s.
+  Egy sz√°ml√°l√≥, hogy egy id≈ë ut√°n kapcsoljon le a kinti l√°mpa.
+  Riaszt√≥kapcsol√≥.
+  V√°ltoz√≥k √©rt√©keinek √∂sszegy≈±jt√©se.
+  V√°ltoz√≥k √©rt√©keinek bluetoothra k√ºld√©se.
   
-  //kimenetek
-  pinMode(kintiVilagitas, OUTPUT);
-  pinMode(bentiVilagitas, OUTPUT);
-  pinMode(termosztatFutson, OUTPUT);
-  pinMode(piezoPin, OUTPUT);
-  pinMode(readyLedPin, OUTPUT);
-  
-  //bemenetek
-  pinMode(pir, INPUT);
-  pinMode(hofokPin, INPUT);  
-  pinMode(fenyPin, INPUT);
-
-  //mÈrÈsek ·tlagait be·llÌtja 0-ra
-  for (int thisReading = 0; thisReading < numReadings; thisReading++) 
-    {
-      readings[thisReading] = 0;
-    }  
-
-  //benti vil·gÌ·ts kikapcsolva induljon
-  digitalWrite(bentiVilagitas, HIGH);
-  digitalWrite(readyLedPin, HIGH);
-  //kis sz¸net indul·s elıtt
-  delay(500);
-}
-
-void loop()
-{       
-  hofokMeres();                       //eredmÈnye az: average
-  lcdKijelzes();                      //LCD kijelzı frissÌtÈse
-  bluetoothEsemenyek();               //bejˆvı parancsok figyelÈse
-  kazanVezerles();                    //hıfokok f¸ggvÈnyÈben ki Ès bekapcsolja a kaz·nt
-  mozgasErzekeles();                  //figyeli, hogy van-e mozg·s
-  kintiVilagitasVezerles();           //ez egy sz·ml·lÛ, hogy egy idı ut·n kapcsoljon le   
-  riasztoVezerles();                  //figyeli, hogy be van-e kapcsolva a riasztÛ Ès van-e mozg·s
-  ertekekOsszegyujtese();             //v·ltozÛk ÈrtÈkeit ˆsszegy˚jti egy tˆmbbe
-  ertekekValtozasanakEllenorzese();   //a tˆmb tartalm·t serialon elk¸ldi ha v·ltozott valami
-  delay(200);                         //kis sz¸net 
-}
-
-void hofokMeres()
-{
-  temp = ((5.0 * analogRead(hofokPin) * 100.0) / 1024) -2 ;
-  total = total - readings[readIndex];
-  readings[readIndex] = temp;
-  total = total + readings[readIndex];
-  readIndex = readIndex + 1;
-  if (readIndex >= numReadings) 
-    {
-      readIndex = 0;
-    }
-  average = total / numReadings;
-  delay(1);
-}
-
-void lcdKijelzes()
-{  
-  lcd.setCursor(0,0);
-  lcd.print("Temp:");  
-  lcd.setCursor(9,0);  
-  lcd.print("Set:"); 
-  lcd.setCursor(0,1);
-  lcd.print("Alarm:");   
-  lcd.setCursor(6,0);
-  lcd.print(average);  
-  lcd.setCursor(14,0);
-  lcd.print(kivantHofok);  
-  //RiasztÛ ·llapot
-  lcd.setCursor(7,1);
-  if (riasztoBekapcsolva == 0)
-  {
-    lcd.print("OFF");
-  }
-  else if (riasztoBekapcsolva == 1)
-  {
-    lcd.print("ON ");
-  }
-  //Mozg·s ·llapot
-  lcd.setCursor(11,1);  
-  if (mozgasVan == 0)
-  {
-    lcd.print("     ");
-  }
-  else if (mozgasVan == 1)
-  {
-    lcd.print("AKTIV");
-  }
-}
-
-void bluetoothEsemenyek()
-{
-  //bejˆvı parancsok figyelÈse
-  if (Serial.available() > 0)
-    {
-      btFogadottAdat = Serial.read();
-              
-        switch(btFogadottAdat)
-        {
-          case 'a':   digitalWrite(bentiVilagitas, LOW);   //a relÈk LOW-on vannak bekapcsolva
-                      break;
-          
-          case 'b':   digitalWrite(bentiVilagitas, HIGH);  //HIGH-on pedig ki      
-                      break;
-    
-          case 'c':   kintiVilagitasOn();
-                      break;
-          
-          case 'd':   kintiVilagitasOff();
-                      break;
-
-          case 'e':   kivantHofokFel();
-                      break;
-          
-          case 'f':   kivantHofokLe();
-                      break;
-    
-          case 'g':   riasztoBekapcsolva = 1;
-                      break;
-          
-          case 'h':   riasztoBekapcsolva = 0;
-                      break;
-
-          case 'i':   ertekekKuldese(); 			//amikor az android onResume-ja meghÌvÛdik,
-                      break;            			//akkor friss adatokat kÈr a h·ztÛl
-          
-          default:    break;
-        }
-    }  
-}
-
-void kazanVezerles()
-{  
-  if (kivantHofok > average)
-  {
-    digitalWrite(termosztatFutson, LOW);
-  }
-  else if (kivantHofok < average)
-  {
-    digitalWrite(termosztatFutson, HIGH);   
-  }
-}
-
-void mozgasErzekeles()
-{
-  if (digitalRead(pir) == HIGH)
-  {
-    mozgasVan = 1;
-    
-    //ha mozg·s Ès sˆtÈt van, akkor null·zza a sz·ml·lÛt, azaz indÌtja a kinti vil·gÌt·st
-    if (fenyero < kintiVilagitasFenyErzek)
-    {
-      kintiVilagitasSzamlalo = 0;
-    }    
-  }
-  else if (digitalRead(pir) == LOW)
-  {
-    mozgasVan = 0;
-  }  
-}
-
-void kintiVilagitasVezerles()
-{
-  fenyero = analogRead(fenyPin);
-    
-  if (kintiVilagitasSzamlalo < kintiVilagitasIdotartam)
-  {
-    digitalWrite(kintiVilagitas, LOW);
-    kintiVilagitasSzamlalo++;
-  }
-  else
-  {
-    digitalWrite(kintiVilagitas, HIGH);
-  }
-}
-
-void kintiVilagitasOn()
-{
-  kintiVilagitasSzamlalo = 0;
-}
-
-void kintiVilagitasOff()
-{
-  kintiVilagitasSzamlalo = kintiVilagitasIdotartam;
-}
-
-void riasztoVezerles()
-{
-  if ( (riasztoBekapcsolva == 1) && (mozgasVan == 1) )
-  {
-    tone(piezoPin, 1000, 70);    
-  }
-  else
-  {
-    noTone(piezoPin);    
-  }
-}
-
-void kivantHofokFel()
-{
-  if (kivantHofok < 35)
-    kivantHofok++;
-}
-
-void kivantHofokLe()
-{
-  if (kivantHofok > 15)
-    kivantHofok--;
-}
-
-void ertekekOsszegyujtese()
-{   
-  ertekGyujtemeny[0] = mozgasVan;
-  ertekGyujtemeny[1] = riasztoBekapcsolva;
-  ertekGyujtemeny[2] = kivantHofok;
-  ertekGyujtemeny[3] = average;
-}
-
-void ertekekValtozasanakEllenorzese()
-{
-  if (  (ertekGyujtemeny_[0] != ertekGyujtemeny[0]) ||
-        (ertekGyujtemeny_[1] != ertekGyujtemeny[1]) ||
-        (ertekGyujtemeny_[2] != ertekGyujtemeny[2]) ||
-        (ertekGyujtemeny_[3] != ertekGyujtemeny[3]) )
-    {
-      ertekekKuldese();
-    }
-}
-
-void ertekekKuldese()
-{        
-  Serial.print('#');                    //a csomag elejÈre: #  
-  for(int k=0; k<4; k++)    
-  {
-    Serial.print(ertekGyujtemeny[k]);   //ÈrtÈkek
-    Serial.print('+');                  //az ÈrtÈkek kˆzÈ: +
-  }  
-  Serial.print('@');                    //a csomag vÈgÈre: @  
-  Serial.println();                     //˙j sor
-
-  //az "elızı" ÈrtÈkeknek megadja az aktu·lisat
-  (ertekGyujtemeny_[0] = ertekGyujtemeny[0]);
-  (ertekGyujtemeny_[1] = ertekGyujtemeny[1]);
-  (ertekGyujtemeny_[2] = ertekGyujtemeny[2]);
-  (ertekGyujtemeny_[3] = ertekGyujtemeny[3]);    
-}
+Android Studioban:
+------------------
+  Bluetooth kapcsol√≥d√°s.
+  V√°ltoz√≥k √©rt√©keinek leolvas√°sa.
+  V√°ltoz√≥k √©rt√©keinek ki√≠r√°sa.
+  Bluetooth parancsok elk√ºld√©se.
+ 
