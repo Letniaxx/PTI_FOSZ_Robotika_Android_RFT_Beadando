@@ -1,20 +1,5 @@
 A projektet két részre lehet bontani, melyek a Vezérlés és annak részei, valamint a Telefonos alkalmazás.
 
-Vezérlés:
----------
-A vezérlést és annak részeit Arduinoval mely egy könnyen programozható áramkörvezérlő egység
-és az ezzel kompatibilis modulokkal valósítjuk meg. 
-Mivel modellt kell készíteni, a kazán működését vörösen izzó ledekkel szimuláljuk.
-Az eszközt átlagosan 10°C és 35°C hőfok közti működésre tervezzük.
-
-Telefonos alkamazás:
---------------------
-A Telefonos alkalmazást Android operációs rendszerrel futó készülékekre készítjük el, így minden Androidos okostelefonon, 
-melynek az Android verziója 2.3.3. vagy ennél naprakészebb és rendelkezik bluetooth modullal hibátlanul működni fog.
-Előreláthatólag az Androidos alkalmazás főmenüjén meg fog jelenni az alkalmazás logója, lámpák ki-be kapcsolására szolgáló
-gombok, termosztát állításának lehetősége, a jelenlegi és beállított hőfok, riasztó ki-be kapcsolására szolgáló gombok
-és egy mozgást jelző indikátor.
-
 Vezérléshez használt elemek:
 ----------------------------
 -ATMega328P mikrokontroller
@@ -33,8 +18,6 @@ Egyéb elemek:
 -Piezo Hangszóró (A riasztást demonstálva)
 -Led (x3) (A kinti és benti világítást, valamint a termosztátot demonstráció céljából ledekkel oldjuk meg.)
 -Ezekhez szükséges kábelek és ellenállások
-
-Ezen fenti elemeket mindet modulárisra szeretnénk tervezni, hogy tovább bővíthetőek legyenek a felhasználó kedvére.
 
 Szoftverek:
 -----------
@@ -63,3 +46,9 @@ Android Studioban:
   Változók értékeinek kiírása.
   Bluetooth parancsok elküldése.
  
+
+Fából készített modellház:
+--------------------------
+Parkettalapokból és egyéb faanyagokból tervezünk egy modell házat. 
+A ház mérete valószínűleg ~30cm*~20cm széles és ~40cm magas lesz.
+
