@@ -24,10 +24,10 @@ Követelmény specifikáció:
 
 Leírás:
 
-Egy elektronika által vezérelt okos ház vezérlőt kell megvalósítani, amit mobilon keresztül irányíthatunk,
+Egy elektronika által vezérelt okos ház vezérlőt kell megvalósítani, amit androidos mobilon keresztül irányíthatunk,
 és kaphatunk információt az okos házról, mint például a hőmérsékletről, riasztó állapotáról, lámpák állapotáról.
 Olyan modellt kell készíteni ami imitálja a valóságot, hogyan működne ez egy családi ház esetében.
-A modellen bemutatható legyen minden funkció és tesztelhető legyen a különböző állapotok kialakulásának helyzete, 
+A modellen bemutatható szerepeljen minden funkció és tesztelhető legyen a különböző állapotok kialakulásának helyzete, 
 mint például mi történik akkor ha nagyon lecsökken a hőmérséklet, esetleg ha a riasztó bekapcsolt állapotában mozgás 
 történik, behatolót észlel a rendszer.
 
@@ -53,7 +53,7 @@ inkább elhagyja a házat.
  - Tudnia kell a hőfokot szabályozni, azaz a kívánt hőmérséklet beállítása után a kazánt 
 addig járassa, míg a szoba el nem éri a kívánt hőmérsékletet, utána kapcsoljon ki.
 Emellett mindig jelezze ki az aktuális hőmérséletett telefonon, és egy külön kijelzőn is.
-Ennek a funkció segítségével könnyedén, a ház bármely pontjából beállíthatjuk a kívánt hőmérsékletet, 
+Ezen funkció segítségével könnyedén, a ház bármely pontjából beállíthatjuk a kívánt hőmérsékletet, 
 így nem kell perceket kidobva elsétálni a kazánig és manuálisan állítani a hőfokon, hisz nem 
 mindig adódik arra lehetőségünk, szabad időnk, hogy elszaladjunk a kazánig, például ha nagy munkába 
 vagyunk belemerülve és elkezdett kihülni a lakás. Ekkor egyszerűen csak elővesszük a mobilunkat és 
@@ -86,5 +86,6 @@ Pénzügyek:
  - Az egész, munkadíjjal együtt ne kerüljön többe, mint 50.000 Ft. 
  - Késedelem esetén, a határidő lejárta után, naponta 1.000 Ft. kötbért
    köteles fizetni a nyertes pályázó
-   
+ - A kifizetése 2 részletben történik, 30% a pályázat elnyerésének napján,
+   valamint a maradék 70% a projekt átadásának napján.
    
