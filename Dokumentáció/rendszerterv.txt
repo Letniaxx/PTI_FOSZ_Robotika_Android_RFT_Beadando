@@ -5,6 +5,7 @@ Vezérlés:
 A vezérlést és annak részeit Arduinoval mely egy könnyen programozható áramkörvezérlő egység
 és az ezzel kompatibilis modulokkal valósítjuk meg. 
 Mivel modellt kell készíteni, a kazán működését vörösen izzó ledekkel szimuláljuk.
+Az eszközt átlagosan 10°C és 35°C hőfok közti működésre tervezzük.
 
 Telefonos alkamazás:
 --------------------
