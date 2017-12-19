@@ -1,0 +1,63 @@
+[Jegyzõkönyv]
+
+A projekt résztvevõi összeültek, hogy megbeszéljék a feladatok kiosztását.
+Helyszín: Eger, EKE C. épület
+Dátum: 2017.09.16
+
+[Résztvevõk]
+A csapat teljes létszámmal jelen volt:
+- Bíró Patrik
+- Dobozi András
+- Balázs Gergõ
+- Eged Zsolt
+- A megrendelõ
+
+[Megrendelõ]
+A megrendelõ felvázolta az igényeit, melyek fõbb pontokban:
+Egy okosház vezérlésének megvalósítását szeretné ami a követketõ funkciókat lássa el:
+- Kültéri és beltéri fények kapcsolása.
+- Riasztó és mozgásérzékelõ vezérlése.
+- Hõmérséklet / termosztát szabályozása.
+- Ezek vezérlésének egy Android alkalmazással való megoldása.
+
+Ezeket mi megvalósíthatónak találtuk és elfogadtuk.
+
+[Zárt körû tanácskozás]
+
+A csapattagok részfeladatokra bontották a projektet.
+- Eszközhasználat megbeszélése.
+- Eszközök beszerzése.
+- Mikrokontroller programozása.
+- Android alkalmazás fejlesztése.
+- Összeszerelés.
+- Dokumentációk írása.
+- Az elkészült termék tesztelése.
+
+Eszközök használatának eldöntése:
+Mikrokontrollernek egy Arduino-t választottunk.
+Szempontok: Megbízható, széles körben elterjedt, elegendõ IO port, ár.
+Az érzékelõk és egyéb eszközök választási szempontja a széles körben való használat.
+
+A tagok felosztották egymás között a fõbb feladatokat:
+
+[Dobozi András]
+- Hardver eszközök beszerzése
+- Arduino programozása
+- Összeszerelés
+- Dokumentálás
+
+[Balázs Gergõ]
+- Dokumentálás
+- Android app felületének megtervezése
+- Tesztelés
+
+[Eged Zsolt]
+- Android alkalmazás fejlesztése
+- Dokumentálás
+- Tesztelés
+
+[Bíró Patrik]
+- Dokumentálás
+- Arduino kód írása
+- Tesztelés
+
